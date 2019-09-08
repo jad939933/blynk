@@ -14,14 +14,13 @@ RETVAL=0
 PROG="blynk" 
 OPTS="-Xmx512m"
 
-DIR="/usr/local/$PROG"
-USER="ec2-user"
+DIR="/home/dev/$PROG"
+USER="dev"
 
 VERSION="-1.0-SNAPSHOT.jar"
 
 start() { 
-    BACKEND=$DIR/target/
-    sudo su -c "/opt/jdk/bin/java $OPTS -cp $BACKEND/$PROG$VERSION:$BACKEND/dependency/* $PROG.Main --wuid=$PROG-ws --config=/etc/woopra.yml > /var/log/$PROG/out 2> /var/log/$PROG/err &" $USER
+    /opt/jdk/bin/java $OPTS -cp $DIR/target/$PROG$VERSION:$DIR/target/dependency/* TestFrame # > /var/log/$PROG/out 2> /var/log/$PROG/err &
     return $RETVAL
 }
 
@@ -40,28 +39,16 @@ reload() {
 }
 
 update() {
-    rm -rf /tmp/staging && mkdir -p /tmp/staging/
-    git clone --branch master --depth 1 git@github.com:Woopra/shared.git /tmp/staging/shared
-    git clone --branch master --depth 1 git@github.com:Woopra/$PROG.git /tmp/staging/$PROG
-    POM=/tmp/staging/pom.xml
+    STAGING_DIR=/tmp/$PROG
+    /bin/rm -rf "$STAGING_DIR" && mkdir -p "$STAGING_DIR/"
+    git clone --branch master --depth 1 git@github.com:jad939933/$PROG.git $STAGING_DIR
 
-    echo '<project>' >> $POM
-    echo '<artifactId>service</artifactId>' >> $POM
-    echo '<groupId>woopra</groupId>' >> $POM
-    echo '<version>1.0</version>' >> $POM
-    echo '<modelVersion>4.0.0</modelVersion>' >> $POM
-    echo '<packaging>pom</packaging>' >> $POM
-    echo '<modules>' >> $POM
-    echo '<module>shared</module>' >> $POM
-    echo "<module>$PROG</module>" >> $POM
-    echo '</modules>' >> $POM
-    echo '</project>' >> $POM
+    JAVA_HOME=/opt/jdk /usr/local/maven/bin/mvn -f $STAGING_DIR/pom.xml -DskipTests -Dmaven.javadoc.skip=true clean compile install dependency:copy-dependencies
 
-    JAVA_HOME=/opt/jdk11 /usr/local/maven/bin/mvn -f /tmp/staging/pom.xml -DskipTests -Dmaven.javadoc.skip=true clean compile install dependency:copy-dependencies
-
-    if [ -d "/tmp/staging/$PROG/target/dependency" ]; then
+    if [ -d "$STAGING_DIR/target/dependency" ]; then
         stop
-	sudo rm -rf $DIR/target && sudo mv /tmp/staging/$PROG/target $DIR/target
+	echo "moving rm -rf $DIR && mv $STAGING_DIR/target $DIR"
+	/bin/rm -rf $DIR && /bin/mv $STAGING_DIR/target $DIR
         start
     fi
 }
