@@ -1,8 +1,5 @@
 package com.balanko;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -116,6 +113,17 @@ public class TestFrame extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+
+        for (int i = 0; i < args.length; i++) {
+            String p = args[i];
+            int c = p.indexOf("=");
+            if (c > 0) {
+                String k = p.substring(0, c);
+                String v = p.substring(c + 1);
+                System.out.println("Config " + k + ": " + v);
+                System.setProperty(k, v);
+            }
+        }
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

@@ -27,14 +27,14 @@ public class Blynk {
         }
     };
 
-    String portName = "/dev/ttyACM0";
     SerialPort port;
 
     private StringBuilder str = new StringBuilder();
 
     public Blynk() throws Exception {
 
-        port = new SerialPort(portName);
+        port = new SerialPort(System.getProperty("port"));
+
         System.out.println("port open: " + port.openPort());
 
         port.setParams(115200, 8, 1, 0, true, true);
@@ -136,6 +136,8 @@ public class Blynk {
     }
 
     public static void main(String[] args) throws Exception {
+
+        System.setProperty("port", "/dev/ttyACM0");
 
         Blynk b = new Blynk();
         System.out.println(b.send("light", 2000));

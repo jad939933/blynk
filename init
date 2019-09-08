@@ -11,7 +11,7 @@
 
 PID=0
 RETVAL=0
-PROG="blynk" 
+PROG="blynk"
 OPTS="-Xmx512m"
 
 DIR="/home/dev/$PROG"
@@ -19,7 +19,8 @@ USER="dev"
 
 VERSION="-1.0-SNAPSHOT.jar"
 
-start() { 
+start() {
+    echo "/opt/jdk/bin/java $OPTS -cp $DIR/$PROG$VERSION:$DIR/dependency/* com.balanko.TestFrame"
     /opt/jdk/bin/java $OPTS -cp $DIR/$PROG$VERSION:$DIR/dependency/* com.balanko.TestFrame # > /var/log/$PROG/out 2> /var/log/$PROG/err &
     return $RETVAL
 }
