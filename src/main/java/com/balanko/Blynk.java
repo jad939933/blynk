@@ -92,7 +92,8 @@ public class Blynk {
      * @return
      * @throws Exception
      */
-    synchronized C send(String cmd, Object... params) throws Exception {
+    synchronized C
+            send(String cmd, Object... params) throws Exception {
 
         String txid = Long.toHexString(counter++);
 
@@ -106,6 +107,7 @@ public class Blynk {
         for (Object param : params) {
             command.append(" ").append(param);
         }
+        System.out.println(">>" + command);
         port.writeString(command.toString());
 
         return c;
@@ -119,7 +121,8 @@ public class Blynk {
      * @return
      * @throws Exception
      */
-    synchronized String sendAndGetResponse(String cmd, Object... params) throws Exception {
+    synchronized String
+            sendAndGetResponse(String cmd, Object... params) throws Exception {
         C c = send(cmd, params);
         c.latch.await(5, TimeUnit.MINUTES);
 

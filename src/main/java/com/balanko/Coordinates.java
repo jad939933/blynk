@@ -11,9 +11,9 @@ package com.balanko;
  */
 public class Coordinates {
 
-    public static int[] position(int cursor) throws Exception {
-        String s[] = positionAsString(cursor).split(" ");
-        return new int[]{Integer.parseInt(s[0]), Integer.parseInt(s[1])};
+    public static Object[] position(int cursor) throws Exception {
+        return positionAsString(cursor).split(" ");
+//        return new int[]{Integer.parseInt(s[0]), Integer.parseInt(s[1])};
     }
 
     public static String positionAsString(int cursor) throws Exception {
