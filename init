@@ -1,0 +1,104 @@
+#!/bin/bash
+#
+#	/etc/rc.d/init.d/blynk
+#
+# Starts blynk
+#
+# chkconfig: 345 95 5
+# description: starts
+# processname: blynk
+
+
+PID=0
+RETVAL=0
+PROG="blynk" 
+OPTS="-Xmx512m"
+
+DIR="/usr/local/$PROG"
+USER="ec2-user"
+
+VERSION="-1.0-SNAPSHOT.jar"
+
+start() { 
+    BACKEND=$DIR/target/
+    sudo su -c "/opt/jdk/bin/java $OPTS -cp $BACKEND/$PROG$VERSION:$BACKEND/dependency/* $PROG.Main --wuid=$PROG-ws --config=/etc/woopra.yml > /var/log/$PROG/out 2> /var/log/$PROG/err &" $USER
+    return $RETVAL
+}
+
+stop() {
+    pgrep -u $USER -f $PROG-ws | xargs kill -9
+    return $RETVAL
+}
+
+restart() {
+    stop
+    start
+}
+
+reload() {
+    restart
+}
+
+update() {
+    rm -rf /tmp/staging && mkdir -p /tmp/staging/
+    git clone --branch master --depth 1 git@github.com:Woopra/shared.git /tmp/staging/shared
+    git clone --branch master --depth 1 git@github.com:Woopra/$PROG.git /tmp/staging/$PROG
+    POM=/tmp/staging/pom.xml
+
+    echo '<project>' >> $POM
+    echo '<artifactId>service</artifactId>' >> $POM
+    echo '<groupId>woopra</groupId>' >> $POM
+    echo '<version>1.0</version>' >> $POM
+    echo '<modelVersion>4.0.0</modelVersion>' >> $POM
+    echo '<packaging>pom</packaging>' >> $POM
+    echo '<modules>' >> $POM
+    echo '<module>shared</module>' >> $POM
+    echo "<module>$PROG</module>" >> $POM
+    echo '</modules>' >> $POM
+    echo '</project>' >> $POM
+
+    JAVA_HOME=/opt/jdk11 /usr/local/maven/bin/mvn -f /tmp/staging/pom.xml -DskipTests -Dmaven.javadoc.skip=true clean compile install dependency:copy-dependencies
+
+    if [ -d "/tmp/staging/$PROG/target/dependency" ]; then
+        stop
+	sudo rm -rf $DIR/target && sudo mv /tmp/staging/$PROG/target $DIR/target
+        start
+    fi
+}
+
+
+
+status_at() {
+    status /usr/sbin/$PROG
+}
+
+case "$1" in
+start)
+      	start
+	;;
+stop)
+     	stop
+	;;
+reload|restart)
+        restart
+        ;;
+update)
+        update
+        ;;
+
+condrestart)
+	if [ -f /var/lock/subsys/$PROG ]; then
+            restart
+        fi
+	;;
+status)
+       	status_at
+        ;;
+*)
+  	echo $"Usage: $0 {start|stop|restart|condrestart|status|info}"
+        exit 1
+esac
+
+exit $?
+exit $RETVAL
+
