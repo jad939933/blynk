@@ -1,3 +1,5 @@
+package com.balanko;
+
 
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
