@@ -82,10 +82,9 @@ public class TestFrame extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            // TODO add your handling code here:
-            getBlynk().send("move", 10_000, 1_000);
+            getBlynk().send("move", Coordinates.position(2));
             getBlynk().send("light", 30_000);
-            getBlynk().send("move", 1000, 1000);
+            getBlynk().send("move", Coordinates.position(1));
             getBlynk().sendAndGetResponse("home");
 
         } catch (Exception ex) {
@@ -97,10 +96,9 @@ public class TestFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
 
         try {
-            // TODO add your handling code here:
-            getBlynk().send("move", 20_000, 13_500);
+            getBlynk().send("move", Coordinates.position(3));
             getBlynk().send("light", 30_000);
-            getBlynk().send("move", 1000, 1000);
+            getBlynk().send("move", Coordinates.position(1));
             getBlynk().sendAndGetResponse("home");
 
         } catch (Exception ex) {
