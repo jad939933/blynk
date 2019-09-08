@@ -20,7 +20,7 @@ USER="dev"
 VERSION="-1.0-SNAPSHOT.jar"
 
 start() { 
-    /opt/jdk/bin/java $OPTS -cp $DIR/target/$PROG$VERSION:$DIR/target/dependency/* TestFrame # > /var/log/$PROG/out 2> /var/log/$PROG/err &
+    /opt/jdk/bin/java $OPTS -cp $DIR/$PROG$VERSION:$DIR/dependency/* com.balanko.TestFrame # > /var/log/$PROG/out 2> /var/log/$PROG/err &
     return $RETVAL
 }
 
