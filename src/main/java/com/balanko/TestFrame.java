@@ -1,6 +1,5 @@
 package com.balanko;
 
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,6 +21,16 @@ public class TestFrame extends javax.swing.JFrame {
         initComponents();
     }
 
+    Blynk blynk;
+
+    private Blynk getBlynk() throws Exception {
+        if (blynk == null) {
+            blynk = new Blynk();
+        }
+
+        return blynk;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -32,13 +41,21 @@ public class TestFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("jButton1");
+        jButton1.setText("red");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("black");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
             }
         });
 
@@ -49,13 +66,17 @@ public class TestFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(112, 112, 112)
                 .addComponent(jButton1)
-                .addContainerGap(211, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2)
+                .addContainerGap(180, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(54, 54, 54)
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addContainerGap(211, Short.MAX_VALUE))
         );
 
@@ -65,11 +86,31 @@ public class TestFrame extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
             // TODO add your handling code here:
-            Blynk.main(new String[]{});
+            getBlynk().send("move", 10_000, 1_000);
+            getBlynk().send("light", 30_000);
+            getBlynk().send("move", 1000, 1000);
+            getBlynk().sendAndGetResponse("home");
+
         } catch (Exception ex) {
-            Logger.getLogger(TestFrame.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+
+        try {
+            // TODO add your handling code here:
+            getBlynk().send("move", 20_000, 13_500);
+            getBlynk().send("light", 30_000);
+            getBlynk().send("move", 1000, 1000);
+            getBlynk().sendAndGetResponse("home");
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -108,5 +149,6 @@ public class TestFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     // End of variables declaration//GEN-END:variables
 }
