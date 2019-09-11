@@ -45,7 +45,7 @@ public class Blynk {
                 if (bytes != null) {
                     for (byte b : bytes) {
                         if (b == 10) {
-                            String e = str.toString();
+                            String e = str.toString().trim();
                             System.out.println(">>" + e);
                             if (e.startsWith("[")) {
                                 if (e.startsWith("[complete ")) {
