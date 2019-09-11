@@ -17,14 +17,14 @@ public class TestFrame extends javax.swing.JFrame {
     public TestFrame() {
         initComponents();
     }
-
+    
     Blynk blynk;
-
+    
     private Blynk getBlynk() throws Exception {
         if (blynk == null) {
             blynk = new Blynk();
         }
-
+        
         return blynk;
     }
 
@@ -86,7 +86,7 @@ public class TestFrame extends javax.swing.JFrame {
             getBlynk().send("light", 30_000);
             getBlynk().send("move", Coordinates.position(1));
             getBlynk().sendAndGetResponse("home");
-
+            
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -100,7 +100,7 @@ public class TestFrame extends javax.swing.JFrame {
             getBlynk().send("light", 30_000);
             getBlynk().send("move", Coordinates.position(1));
             getBlynk().sendAndGetResponse("home");
-
+            
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -111,15 +111,17 @@ public class TestFrame extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-
+        
         for (int i = 0; i < args.length; i++) {
             String p = args[i];
             int c = p.indexOf("=");
             if (c > 0) {
                 String k = p.substring(0, c);
-                String v = p.substring(c + 1);
-                System.out.println("Config " + k + ": " + v);
-                System.setProperty(k, v);
+                if (k.startsWith("--")) {
+                    String v = p.substring(c + 1);
+                    System.out.println("Config " + k + ": " + v);
+                    System.setProperty(k.substring(2), v);
+                }
             }
         }
         /* Set the Nimbus look and feel */
