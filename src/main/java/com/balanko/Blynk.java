@@ -52,7 +52,6 @@ public class Blynk {
                                 if (e.startsWith("[complete ")) {
                                     String s[] = e.split(" ");
                                     String txid = s[1];
-                                    System.err.println("complete txid " + txid);
                                     C c = callbacks.get(txid);
                                     if (c != null) {
                                         c.value = e;
@@ -61,7 +60,6 @@ public class Blynk {
                                 } else if (e.startsWith("[received ")) {
                                     String s[] = e.split(" ");
                                     String txid = s[1];
-                                    System.err.println("received txid " + txid);
                                     C c = callbacks.get(txid);
                                     if (c != null) {
                                         c.value = e;
@@ -117,7 +115,7 @@ public class Blynk {
         for (Object param : params) {
             command.append(" ").append(param);
         }
-        System.out.println(">>" + command);
+        System.out.println("SEND: " + command);
         port.writeString(command.toString() + "\n");
 
         c.received.await(1, TimeUnit.MINUTES);

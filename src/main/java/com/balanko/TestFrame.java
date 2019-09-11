@@ -84,8 +84,8 @@ public class TestFrame extends javax.swing.JFrame {
         try {
             getBlynk().send("move", Coordinates.position(2));
             getBlynk().send("light", 30_000);
-            getBlynk().send("move", Coordinates.position(1));
-            getBlynk().sendAndGetResponse("home");
+            getBlynk().sendAndGetResponse("move", Coordinates.position(1));
+//            getBlynk().sendAndGetResponse("home");
             
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -98,8 +98,8 @@ public class TestFrame extends javax.swing.JFrame {
         try {
             getBlynk().send("move", Coordinates.position(3));
             getBlynk().send("light", 30_000);
-            getBlynk().send("move", Coordinates.position(1));
-            getBlynk().sendAndGetResponse("home");
+            getBlynk().sendAndGetResponse("move", Coordinates.position(1));
+//            getBlynk().sendAndGetResponse("home");
             
         } catch (Exception ex) {
             ex.printStackTrace();
