@@ -150,7 +150,18 @@ public class Blynk {
 
     public static void main(String[] args) throws Exception {
 
-        System.setProperty("port", "/dev/ttyACM0");
+        for (int i = 0; i < args.length; i++) {
+            String p = args[i];
+            int c = p.indexOf("=");
+            if (c > 0) {
+                String k = p.substring(0, c);
+                if (k.startsWith("--")) {
+                    String v = p.substring(c + 1);
+                    System.out.println("Config " + k + ": " + v);
+                    System.setProperty(k.substring(2), v);
+                }
+            }
+        }
 
         Blynk b = new Blynk();
         b.send("light", 2000);
