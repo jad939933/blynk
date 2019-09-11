@@ -14,7 +14,8 @@ import jssc.SerialPortEvent;
  */
 class C {
 
-    CountDownLatch latch = new CountDownLatch(1);
+    CountDownLatch received = new CountDownLatch(1);
+    CountDownLatch completed = new CountDownLatch(1);
     String value;
 }
 
@@ -51,11 +52,20 @@ public class Blynk {
                                 if (e.startsWith("[complete ")) {
                                     String s[] = e.split(" ");
                                     String txid = s[1];
-                                    System.err.println("Resolving txid " + txid);
+                                    System.err.println("complete txid " + txid);
                                     C c = callbacks.get(txid);
                                     if (c != null) {
                                         c.value = e;
-                                        c.latch.countDown();
+                                        c.completed.countDown();
+                                    }
+                                } else if (e.startsWith("[received ")) {
+                                    String s[] = e.split(" ");
+                                    String txid = s[1];
+                                    System.err.println("received txid " + txid);
+                                    C c = callbacks.get(txid);
+                                    if (c != null) {
+                                        c.value = e;
+                                        c.received.countDown();
                                     }
                                 }
                             }
@@ -93,8 +103,7 @@ public class Blynk {
      * @return
      * @throws Exception
      */
-    synchronized C
-            send(String cmd, Object... params) throws Exception {
+    synchronized C send(String cmd, Object... params) throws Exception {
 
         String txid = Long.toHexString(counter++);
 
@@ -111,6 +120,8 @@ public class Blynk {
         System.out.println(">>" + command);
         port.writeString(command.toString() + "\n");
 
+        c.received.await(1, TimeUnit.MINUTES);
+
         return c;
 
     }
@@ -125,7 +136,7 @@ public class Blynk {
     synchronized String
             sendAndGetResponse(String cmd, Object... params) throws Exception {
         C c = send(cmd, params);
-        c.latch.await(5, TimeUnit.MINUTES);
+        c.completed.await(5, TimeUnit.MINUTES);
 
         return c.value;
     }
