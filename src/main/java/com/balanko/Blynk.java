@@ -51,6 +51,7 @@ public class Blynk {
                                 if (e.startsWith("[complete ")) {
                                     String s[] = e.split(" ");
                                     String txid = s[1];
+                                    System.err.println("Resolving txid " + txid);
                                     C c = callbacks.get(txid);
                                     if (c != null) {
                                         c.value = e;
