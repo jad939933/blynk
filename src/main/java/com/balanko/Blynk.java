@@ -109,7 +109,7 @@ public class Blynk {
             command.append(" ").append(param);
         }
         System.out.println(">>" + command);
-        port.writeString(command.toString());
+        port.writeString(command.toString() + "\n");
 
         return c;
 
