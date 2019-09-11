@@ -144,6 +144,8 @@ public class Blynk {
         System.setProperty("port", "/dev/ttyACM0");
 
         Blynk b = new Blynk();
+        b.send("light", 2000);
+        b.send("light", 2000);
         System.out.println("REC:: " + b.sendAndGetResponse("light", 2000));
 
         Thread.sleep(15_000);
