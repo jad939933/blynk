@@ -17,14 +17,14 @@ public class TestFrame extends javax.swing.JFrame {
     public TestFrame() {
         initComponents();
     }
-    
+
     Blynk blynk;
-    
+
     private Blynk getBlynk() throws Exception {
         if (blynk == null) {
             blynk = new Blynk();
         }
-        
+
         return blynk;
     }
 
@@ -41,6 +41,11 @@ public class TestFrame extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         jButton1.setText("red");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -86,7 +91,7 @@ public class TestFrame extends javax.swing.JFrame {
             getBlynk().send("light", 30_000);
             getBlynk().sendAndGetResponse("move", Coordinates.position(1));
 //            getBlynk().sendAndGetResponse("home");
-            
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -100,18 +105,25 @@ public class TestFrame extends javax.swing.JFrame {
             getBlynk().send("light", 30_000);
             getBlynk().sendAndGetResponse("move", Coordinates.position(1));
 //            getBlynk().sendAndGetResponse("home");
-            
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
     }//GEN-LAST:event_jButton2ActionPerformed
 
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+
+        System.exit(0);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowClosed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        
+
         for (int i = 0; i < args.length; i++) {
             String p = args[i];
             int c = p.indexOf("=");
