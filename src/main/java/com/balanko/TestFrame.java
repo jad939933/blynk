@@ -1,5 +1,8 @@
 package com.balanko;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -27,6 +30,8 @@ public class TestFrame extends javax.swing.JFrame {
 
         return blynk;
     }
+
+    private ExecutorService exec = Executors.newFixedThreadPool(1);
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -66,50 +71,53 @@ public class TestFrame extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(112, 112, 112)
-                .addComponent(jButton1)
+                .addGap(59, 59, 59)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
-                .addContainerGap(180, Short.MAX_VALUE))
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(131, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(54, 54, 54)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addContainerGap(211, Short.MAX_VALUE))
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(156, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        try {
-            getBlynk().send("move", Coordinates.position(2));
-            getBlynk().send("light", 30_000);
-            getBlynk().sendAndGetResponse("move", Coordinates.position(1));
+
+        exec.submit(() -> {
+            try {
+                getBlynk().send("move", Coordinates.position(2));
+                getBlynk().send("light", 3_000);
+                getBlynk().sendAndGetResponse("move", Coordinates.position(1));
 //            getBlynk().sendAndGetResponse("home");
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-
-        try {
-            getBlynk().send("move", Coordinates.position(3));
-            getBlynk().send("light", 30_000);
-            getBlynk().sendAndGetResponse("move", Coordinates.position(1));
+        exec.submit(() -> {
+            try {
+                getBlynk().send("move", Coordinates.position(3));
+                getBlynk().send("light", 3_000);
+                getBlynk().sendAndGetResponse("move", Coordinates.position(1));
 //            getBlynk().sendAndGetResponse("home");
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
     }//GEN-LAST:event_jButton2ActionPerformed
 
 
