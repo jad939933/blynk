@@ -168,6 +168,10 @@ public class Blynk {
         b.send("light", 2000);
         System.out.println("REC:: " + b.sendAndGetResponse("light", 2000));
 
+        b.send("move", 10000, 1000);
+        b.send("move", 20000, 1000);
+        System.out.println(b.sendAndGetResponse("move", 1000, 1200));
+
         Thread.sleep(15_000);
 
         b.close();
