@@ -65,6 +65,14 @@ public class Blynk {
                                         c.value = e;
                                         c.received.countDown();
                                     }
+                                } else if (e.startsWith("[error ")) {
+                                    String s[] = e.split(" ");
+                                    String txid = s[1];
+                                    C c = callbacks.get(txid);
+                                    if (c != null) {
+                                        c.value = "error!!";
+                                        c.received.countDown();
+                                    }
                                 }
                             }
 
@@ -171,6 +179,8 @@ public class Blynk {
         b.send("move", 10000, 1000);
         b.send("move", 20000, 1000);
         System.out.println(b.sendAndGetResponse("move", 1000, 1200));
+
+        System.out.println(b.sendAndGetResponse("home", 1000, 1200));
 
         Thread.sleep(15_000);
 
