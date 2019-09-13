@@ -157,7 +157,7 @@ public class TestFrame extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         exec.submit(() -> {
             try {
-                getBlynk().sendAndGetResponse("home", Coordinates.position(3));
+                getBlynk().sendAndGetResponse("home");
 
             } catch (Exception ex) {
                 ex.printStackTrace();
