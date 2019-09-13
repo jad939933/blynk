@@ -136,7 +136,7 @@ public class TestFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         exec.submit(() -> {
             try {
-                getBlynk().send("move", Coordinates.position(3));
+                getBlynk().send("move", Coordinates.position(5));
                 getBlynk().send("light", 3_000);
                 getBlynk().sendAndGetResponse("move", Coordinates.position(1));
 //            getBlynk().sendAndGetResponse("home");
