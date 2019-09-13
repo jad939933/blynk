@@ -1,7 +1,10 @@
 package com.balanko;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import javax.swing.JFrame;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -19,6 +22,15 @@ public class TestFrame extends javax.swing.JFrame {
      */
     public TestFrame() {
         initComponents();
+
+        super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        Dimension DimMax = Toolkit.getDefaultToolkit().getScreenSize();
+        super.setMaximumSize(DimMax);
+
+        super.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        super.pack();
     }
 
     Blynk blynk;
