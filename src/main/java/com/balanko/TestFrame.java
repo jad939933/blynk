@@ -117,8 +117,15 @@ public class TestFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    void enableButtons(boolean enable) {
+
+        jButton1.setEnabled(enable);
+        jButton2.setEnabled(enable);
+        jButton3.setEnabled(enable);
+    }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
+        enableButtons(false);
         exec.submit(() -> {
             try {
                 getBlynk().send("on");
@@ -129,12 +136,16 @@ public class TestFrame extends javax.swing.JFrame {
 
             } catch (Exception ex) {
                 ex.printStackTrace();
+            } finally {
+                enableButtons(true);
             }
         });
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+
+        enableButtons(false);
+
         exec.submit(() -> {
             try {
                 getBlynk().send("on");
@@ -145,6 +156,8 @@ public class TestFrame extends javax.swing.JFrame {
 
             } catch (Exception ex) {
                 ex.printStackTrace();
+            } finally {
+                enableButtons(true);
             }
         });
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -157,6 +170,8 @@ public class TestFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        enableButtons(false);
+
         exec.submit(() -> {
             try {
                 getBlynk().send("on");
@@ -167,6 +182,8 @@ public class TestFrame extends javax.swing.JFrame {
 
             } catch (Exception ex) {
                 ex.printStackTrace();
+            } finally {
+                enableButtons(true);
             }
         });
     }//GEN-LAST:event_jButton3ActionPerformed
