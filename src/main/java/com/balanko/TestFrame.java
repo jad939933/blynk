@@ -121,10 +121,11 @@ public class TestFrame extends javax.swing.JFrame {
 
         exec.submit(() -> {
             try {
+                getBlynk().send("on");
                 getBlynk().send("move", Coordinates.position(2));
                 getBlynk().send("light", 3_000);
-                getBlynk().sendAndGetResponse("move", Coordinates.position(1));
-//            getBlynk().sendAndGetResponse("home");
+                getBlynk().send("move", Coordinates.position(1));
+                getBlynk().sendAndGetResponse("off");
 
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -136,10 +137,11 @@ public class TestFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         exec.submit(() -> {
             try {
+                getBlynk().send("on");
                 getBlynk().send("move", Coordinates.position(5));
                 getBlynk().send("light", 3_000);
-                getBlynk().sendAndGetResponse("move", Coordinates.position(1));
-//            getBlynk().sendAndGetResponse("home");
+                getBlynk().send("move", Coordinates.position(1));
+                getBlynk().sendAndGetResponse("off");
 
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -157,7 +159,11 @@ public class TestFrame extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         exec.submit(() -> {
             try {
-                getBlynk().sendAndGetResponse("home", 1000, 1000);
+                getBlynk().send("on");
+
+                getBlynk().send("home");
+
+                getBlynk().sendAndGetResponse("off");
 
             } catch (Exception ex) {
                 ex.printStackTrace();

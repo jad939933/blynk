@@ -120,6 +120,9 @@ public class Blynk {
         command.append(txid);
         command.append(" ");
         command.append(cmd);
+        if (params == null || params.length == 0) {
+            params = new Object[]{"0", "0"};
+        }
         for (Object param : params) {
             command.append(" ").append(param);
         }
