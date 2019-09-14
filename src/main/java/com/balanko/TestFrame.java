@@ -114,11 +114,11 @@ public class TestFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    void enableButtons(boolean enable) {
+    void enableButtons(boolean enabled) {
 
-        jButton1.setEnabled(enable);
-        jButton2.setEnabled(enable);
-        jButton3.setEnabled(enable);
+        jButton1.setEnabled(enabled);
+        jButton2.setEnabled(enabled);
+        jButton3.setEnabled(enabled);
     }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
@@ -226,10 +226,8 @@ public class TestFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new TestFrame().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new TestFrame().setVisible(true);
         });
     }
 
