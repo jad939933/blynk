@@ -1,0 +1,246 @@
+#include <AccelStepper.h> 
+#include <QList.h>
+ 
+
+
+const unsigned long ULONG_MAX = 0UL - 1UL;
+
+
+// Define some steppers and the pins the will use
+AccelStepper stepper1(AccelStepper::DRIVER, 2, 4);
+
+AccelStepper stepper2(AccelStepper::DRIVER, 8, 10);
+
+QList<String> list;
+
+
+
+long homing_1 = -1;
+long homing_2 = -1;
+
+long resetLight = ULONG_MAX;
+
+
+String fsm = "";
+ 
+
+String nextInstruction() {
+  if (list.size() > 0) {
+    String instruction = list.get(0);
+    list.pop_front();
+    return instruction;
+  } else {
+    return "";
+  }
+}
+
+String getValue(String data, char separator, int index)
+{
+  int found = 0;
+  int strIndex[] = {0, -1};
+  int maxIndex = data.length() - 1;
+
+  for (int i = 0; i <= maxIndex && found <= index; i++) {
+    if (data.charAt(i) == separator || i == maxIndex) {
+      found++;
+      strIndex[0] = strIndex[1] + 1;
+      strIndex[1] = (i == maxIndex) ? i + 1 : i;
+    }
+  }
+
+  return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
+}
+
+int LED=26;
+int POWER=27;
+
+
+void setup()
+{
+  // Debug console
+  Serial.begin(115200);
+
+  pinMode(3, OUTPUT);
+  digitalWrite(3, LOW);
+  pinMode(5, OUTPUT);
+  digitalWrite(5, LOW);
+
+  pinMode(9, OUTPUT);
+  digitalWrite(9, LOW);
+  pinMode(11, OUTPUT);
+  digitalWrite(11, LOW);
+
+
+  pinMode(LED, OUTPUT);
+  digitalWrite(LED, LOW);
+
+  pinMode(POWER, OUTPUT);
+  digitalWrite(POWER, LOW);
+ 
+}
+
+boolean light() {
+
+  int state = 0;
+
+  if (millis() > resetLight) {
+    state++;
+  }
+
+  if (state == 1) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+String currentInstruction;
+
+void loop()
+{
+
+   if (Serial.available() > 0) {
+     String str = Serial.readString();
+     list.push_back(str);
+  }  
+
+  
+
+  if (fsm == "") {
+    //next instruction
+
+    currentInstruction = nextInstruction();
+
+    if (currentInstruction==""){
+      fsm="";
+    }else{
+
+      String txid= getValue(currentInstruction, ' ', 0);
+      fsm=getValue(currentInstruction, ' ', 1);
+      
+      fsm.toUpperCase();
+      
+      Serial.println("[received "+currentInstruction+"]");
+      Serial.flush();
+    }
+
+  } else if (fsm == "PING") {
+      Serial.println((String)"[complete "+currentInstruction+"]");
+      Serial.flush();
+
+      fsm="";
+
+  } else if (fsm == "ON") {
+
+    digitalWrite(POWER, HIGH);
+    Serial.println((String)"[complete "+currentInstruction+"]");
+    Serial.flush();
+    fsm="";
+    
+  } else if (fsm == "OFF") {
+
+    digitalWrite(POWER, LOW);
+    Serial.println((String)"[complete "+currentInstruction+"]");
+    Serial.flush();
+    fsm="";
+
+  } else if (fsm == "HOME") {
+    //homing
+
+    if (analogRead(A0) > 800 && analogRead(A1) > 800) {
+      fsm = "";
+      Serial.println((String)"[complete "+currentInstruction+"]");
+      Serial.flush();
+
+    } else {
+
+      stepper1.setMaxSpeed(1000.0);
+      stepper1.setAcceleration(1000.0);
+      stepper1.setCurrentPosition(0);
+      stepper1.moveTo(-1000000);
+      homing_1 = 0;
+
+      stepper2.setMaxSpeed(600.0);
+      stepper2.setAcceleration(600.0);
+      stepper2.setCurrentPosition(0);
+      stepper2.moveTo(-1000000);
+      homing_2 = 0;
+      fsm = "HOME_TRANSITION";
+    }
+
+  } else if (fsm == "HOME_TRANSITION") {
+ 
+    if (analogRead(A0) > 800 && homing_1 == 0) {
+      stepper1.setCurrentPosition(0);
+      stepper1.moveTo(-10);
+      homing_1 = 1;
+    }
+
+    if (analogRead(A1) > 800 && homing_2 == 0) {
+      stepper2.setCurrentPosition(0);
+      stepper2.moveTo(-10);
+      homing_2 = 1;
+    }
+
+    if (homing_1 == 1 && homing_2 == 1) {
+      
+      Serial.println((String)"[complete "+currentInstruction+"]");
+      Serial.flush();
+
+      fsm = "";
+    }
+
+  } else if (fsm == "MOVE") {
+    //move x;y
+
+    stepper1.setMaxSpeed(6000.0);
+    stepper1.setAcceleration(1000.0);
+    stepper1.moveTo(getValue(currentInstruction, ' ', 2).toInt());
+
+    stepper2.setMaxSpeed(4000.0);
+    stepper2.setAcceleration(1000.0);
+    stepper2.moveTo(getValue(currentInstruction, ' ', 3).toInt());
+
+    fsm = "MOVE_TRANSITION"; //send to transition
+    
+  } else if (fsm == "MOVE_TRANSITION") {
+    if (stepper1.distanceToGo() == 0 && stepper2.distanceToGo() == 0) {
+      
+      Serial.println((String)"[complete "+currentInstruction+"]");
+      Serial.flush();
+
+      fsm = "";
+    }
+  } else if (fsm == "LIGHT") {
+    //light on
+
+    digitalWrite(LED, HIGH);
+    resetLight = millis() + getValue(currentInstruction, ' ', 2).toInt();
+    fsm = "LIGHT_RUN";
+
+  } else if (fsm == "LIGHT_RUN") {
+
+    if (light() == true) {
+      resetLight = ULONG_MAX;
+      digitalWrite(LED, LOW);
+      Serial.println((String)"[complete "+currentInstruction+"]");
+      Serial.flush();
+
+      fsm = "";
+    }
+  }else{
+    Serial.println((String)"[error "+currentInstruction+"]");
+    Serial.flush();
+    fsm="";
+  }
+
+  stepper1.run();
+  stepper2.run();
+
+
+  
+
+
+}
+
+
