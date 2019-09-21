@@ -259,13 +259,16 @@ public class TestFrame extends javax.swing.JFrame {
 //            java.util.logging.Logger.getLogger(TestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 //        }
         //</editor-fold>
-        try {
-            Thread.sleep(10_000);
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
+
+//            try {
+//                Thread.sleep(10_000);
+//            } catch (InterruptedException ex) {
+//                ex.printStackTrace();
+//            }
+
             new TestFrame().setVisible(true);
         });
     }
