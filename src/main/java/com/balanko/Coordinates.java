@@ -23,9 +23,9 @@ public class Coordinates {
             case 1:
                 return "0 13500";
             case 2:
-                return "23000 1400";
+                return "24000 1400";
             case 3:
-                return "23000 13500";
+                return "24000 13500";
             case 4:
                 return "52000 1400";
             case 5:
