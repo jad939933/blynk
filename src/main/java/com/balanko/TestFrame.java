@@ -211,11 +211,15 @@ public class TestFrame extends javax.swing.JFrame {
         exec.submit(() -> {
             try {
 
-                getBlynk().send("on");
+                getBlynk().sendAndGetResponse("on");
+
                 for (int i = 0; i < 18; i++) {
                     getBlynk().send("move", Coordinates.position(i));
-                    getBlynk().send("light", 10_000);
+                    getBlynk().send("light", 2_000);
                 }
+                getBlynk().send("move", Coordinates.position(0));
+                getBlynk().send("home");
+
                 getBlynk().sendAndGetResponse("off");
 
             } catch (Exception ex) {
