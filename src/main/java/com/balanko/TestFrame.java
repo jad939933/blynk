@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 
 /*
@@ -279,7 +281,15 @@ public class TestFrame extends javax.swing.JFrame {
 //            } catch (InterruptedException ex) {
 //                ex.printStackTrace();
 //            }
-            new TestFrame().setVisible(true);
+            TestFrame t=new TestFrame();
+            t.setVisible(true);
+            
+            try {
+                t.getBlynk().sendAndGetResponse("off");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
         });
     }
 
