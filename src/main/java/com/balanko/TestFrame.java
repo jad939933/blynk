@@ -4,8 +4,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 
 /*
@@ -123,6 +121,7 @@ public class TestFrame extends javax.swing.JFrame {
         jButton2.setEnabled(enabled);
         jButton3.setEnabled(enabled);
         jButton4.setEnabled(enabled);
+        jButton5.setEnabled(enabled);
     }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
@@ -131,7 +130,7 @@ public class TestFrame extends javax.swing.JFrame {
             try {
                 getBlynk().send("on");
                 getBlynk().send("move", Coordinates.position(2));
-                getBlynk().send("light", 10_000);
+                getBlynk().send("light", 60_000);
                 getBlynk().send("move", Coordinates.position(1));
                 getBlynk().sendAndGetResponse("off");
 
@@ -151,7 +150,7 @@ public class TestFrame extends javax.swing.JFrame {
             try {
                 getBlynk().send("on");
                 getBlynk().send("move", Coordinates.position(5));
-                getBlynk().send("light", 10_000);
+                getBlynk().send("light", 60_000);
                 getBlynk().send("move", Coordinates.position(1));
                 getBlynk().sendAndGetResponse("off");
 
@@ -281,9 +280,9 @@ public class TestFrame extends javax.swing.JFrame {
 //            } catch (InterruptedException ex) {
 //                ex.printStackTrace();
 //            }
-            TestFrame t=new TestFrame();
+            TestFrame t = new TestFrame();
             t.setVisible(true);
-            
+
             try {
                 t.getBlynk().sendAndGetResponse("off");
             } catch (Exception ex) {
