@@ -56,9 +56,9 @@ public class TestFrame extends javax.swing.JFrame {
 
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -68,7 +68,7 @@ public class TestFrame extends javax.swing.JFrame {
         });
         getContentPane().setLayout(new java.awt.GridLayout(2, 4));
 
-        jButton1.setText("RED");
+        jButton1.setText("VOKA");
         jButton1.setToolTipText("");
         jButton1.setMaximumSize(new java.awt.Dimension(90, 90));
         jButton1.setMinimumSize(new java.awt.Dimension(90, 90));
@@ -79,7 +79,7 @@ public class TestFrame extends javax.swing.JFrame {
         });
         getContentPane().add(jButton1);
 
-        jButton2.setText("BLACK");
+        jButton2.setText("BULLEIT");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -87,15 +87,7 @@ public class TestFrame extends javax.swing.JFrame {
         });
         getContentPane().add(jButton2);
 
-        jButton3.setText("HOME");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jButton3);
-
-        jButton4.setText("Light");
+        jButton4.setText("JACK");
         jButton4.setToolTipText("");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -111,6 +103,14 @@ public class TestFrame extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton5);
+
+        jButton3.setText("HOME");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton3);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -130,7 +130,7 @@ public class TestFrame extends javax.swing.JFrame {
             try {
                 getBlynk().send("on");
                 getBlynk().send("move", Coordinates.position(2));
-                getBlynk().send("light", 60_000);
+                getBlynk().send("light", 20_000);
                 getBlynk().send("move", Coordinates.position(1));
                 getBlynk().sendAndGetResponse("off");
 
@@ -149,8 +149,8 @@ public class TestFrame extends javax.swing.JFrame {
         exec.submit(() -> {
             try {
                 getBlynk().send("on");
-                getBlynk().send("move", Coordinates.position(5));
-                getBlynk().send("light", 60_000);
+                getBlynk().send("move", Coordinates.position(12));
+                getBlynk().send("light", 20_000);
                 getBlynk().send("move", Coordinates.position(1));
                 getBlynk().sendAndGetResponse("off");
 
@@ -189,14 +189,17 @@ public class TestFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
 
         enableButtons(false);
 
         exec.submit(() -> {
             try {
 
-                getBlynk().sendAndGetResponse("light", 10_000);
+                getBlynk().send("on");
+                getBlynk().send("move", Coordinates.position(15));
+                getBlynk().send("light", 20_000);
+                getBlynk().send("move", Coordinates.position(1));
+                getBlynk().sendAndGetResponse("off");
 
             } catch (Exception ex) {
                 ex.printStackTrace();

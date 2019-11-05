@@ -4,6 +4,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import org.eclipse.jetty.server.HttpConfiguration;
@@ -125,8 +127,17 @@ public class Blynk {
         server.addConnector(connector);
 
         // Start the server
-        server.start();
-        server.join();
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    server.start();
+                    server.join();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        };
 
     }
 
