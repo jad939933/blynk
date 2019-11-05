@@ -12,16 +12,16 @@
 PID=0
 RETVAL=0
 PROG="blynk"
-OPTS="-Xmx512m"
+OPTS="-Xmx256m"
+USER="pi"
 
-DIR="/home/dev/$PROG"
+DIR="/home/$USER/$PROG"
 USER="dev"
 
 VERSION="-1.0-SNAPSHOT.jar"
 
 start() {
-    echo "/opt/jdk/bin/java $OPTS -cp $DIR/$PROG$VERSION:$DIR/dependency/* com.balanko.TestFrame"
-    /opt/jdk/bin/java $OPTS -cp $DIR/$PROG$VERSION:$DIR/dependency/* com.balanko.TestFrame # > /var/log/$PROG/out 2> /var/log/$PROG/err &
+    sudo java $OPTS -cp $DIR/target/$PROG$VERSION:$DIR/target/dependency/* com.balanko.TestFrame --port=/dev/ttyS0 # > /var/log/$PROG/out 2> /var/log/$PROG/err &
     return $RETVAL
 }
 
@@ -40,18 +40,8 @@ reload() {
 }
 
 update() {
-    STAGING_DIR=/tmp/$PROG
-    /bin/rm -rf "$STAGING_DIR" && mkdir -p "$STAGING_DIR/"
-    git clone --branch master --depth 1 git@github.com:jad939933/$PROG.git $STAGING_DIR
-
-    JAVA_HOME=/opt/jdk /usr/local/maven/bin/mvn -f $STAGING_DIR/pom.xml -DskipTests -Dmaven.javadoc.skip=true clean compile install dependency:copy-dependencies
-
-    if [ -d "$STAGING_DIR/target/dependency" ]; then
-        stop
-	echo "moving rm -rf $DIR && mv $STAGING_DIR/target $DIR"
-	/bin/rm -rf $DIR && /bin/mv $STAGING_DIR/target $DIR
-        start
-    fi
+    #git clone --branch master --depth 1 https://github.com/jad939933/$PROG.git $STAGING_DIR
+    /usr/local/maven/bin/mvn -f $DIR/pom.xml -DskipTests -Dmaven.javadoc.skip=true clean compile install dependency:copy-dependencies
 }
 
 
@@ -89,4 +79,3 @@ esac
 
 exit $?
 exit $RETVAL
-
