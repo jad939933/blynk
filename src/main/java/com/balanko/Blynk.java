@@ -6,6 +6,10 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
+import org.eclipse.jetty.server.HttpConfiguration;
+import org.eclipse.jetty.server.HttpConnectionFactory;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -98,6 +102,32 @@ public class Blynk {
             }
         });
 
+        /**
+         * start web server
+         */
+        Server server = new Server();
+
+        // Handler
+        server.setHandler(new WebHandler(this));
+
+        // HTTP Configuration
+        HttpConfiguration httpConfig = new HttpConfiguration();
+        // httpConfig.setOutputBufferSize(32 * 1024);
+        // httpConfig.setRequestHeaderSize(8 * 1024);
+        // httpConfig.setResponseHeaderSize(8 * 1024);
+        httpConfig.setSendServerVersion(false);
+        httpConfig.setSendDateHeader(false);
+
+        // === jetty-http.xml ===
+        ServerConnector connector = new ServerConnector(server, new HttpConnectionFactory(httpConfig));
+        connector.setPort(8080);
+        connector.setIdleTimeout(30_000);
+        server.addConnector(connector);
+
+        // Start the server
+        server.start();
+        server.join();
+
     }
 
     long counter = 0;
@@ -159,6 +189,11 @@ public class Blynk {
         port.closePort();
     }
 
+    /**
+     *
+     * @param args
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception {
 
         for (int i = 0; i < args.length; i++) {
