@@ -40,6 +40,9 @@ public class Blynk {
 
     public Blynk() throws Exception {
 
+        
+        startServer();
+        
         port = new SerialPort(System.getProperty("port"));
 
         System.out.println("port open: " + port.openPort());
@@ -103,41 +106,46 @@ public class Blynk {
                 }
             }
         });
+    }
+    
+    
+    private void startServer() {
 
-        /**
-         * start web server
-         */
-        Server server = new Server();
-
-        // Handler
-        server.setHandler(new WebHandler(this));
-
-        // HTTP Configuration
-        HttpConfiguration httpConfig = new HttpConfiguration();
-        // httpConfig.setOutputBufferSize(32 * 1024);
-        // httpConfig.setRequestHeaderSize(8 * 1024);
-        // httpConfig.setResponseHeaderSize(8 * 1024);
-        httpConfig.setSendServerVersion(false);
-        httpConfig.setSendDateHeader(false);
-
-        // === jetty-http.xml ===
-        ServerConnector connector = new ServerConnector(server, new HttpConnectionFactory(httpConfig));
-        connector.setPort(8080);
-        connector.setIdleTimeout(30_000);
-        server.addConnector(connector);
-
-        // Start the server
-        new Thread() {
+         new Thread() {
             @Override
             public void run() {
-                try {
+
+                try{
+                
+                    /**
+                     * start web server
+                     */
+                    Server server = new Server();
+
+                    // Handler
+                    server.setHandler(new WebHandler(this));
+
+                    // HTTP Configuration
+                    HttpConfiguration httpConfig = new HttpConfiguration();
+                    // httpConfig.setOutputBufferSize(32 * 1024);
+                    // httpConfig.setRequestHeaderSize(8 * 1024);
+                    // httpConfig.setResponseHeaderSize(8 * 1024);
+                    httpConfig.setSendServerVersion(false);
+                    httpConfig.setSendDateHeader(false);
+
+                    // === jetty-http.xml ===
+                    ServerConnector connector = new ServerConnector(server, new HttpConnectionFactory(httpConfig));
+                    connector.setPort(8080);
+                    connector.setIdleTimeout(30_000);
+                    server.addConnector(connector);
+
                     server.start();
                     server.join();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
-        };
+        }.start();
 
     }
 
