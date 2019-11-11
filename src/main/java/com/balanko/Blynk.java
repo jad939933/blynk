@@ -123,7 +123,7 @@ public class Blynk {
                     Server server = new Server();
 
                     // Handler
-                    server.setHandler(new WebHandler(this));
+                    server.setHandler(new WebHandler(Blynk.this));
 
                     // HTTP Configuration
                     HttpConfiguration httpConfig = new HttpConfiguration();
