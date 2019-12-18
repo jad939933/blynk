@@ -178,7 +178,7 @@ public class TestFrame extends javax.swing.JFrame {
 
                 getBlynk().send("home");
 
-                getBlynk().sendAndGetResponse("off");
+                //getBlynk().sendAndGetResponse("off");
 
             } catch (Exception ex) {
                 ex.printStackTrace();
