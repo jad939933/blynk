@@ -21,18 +21,9 @@ public class TestFrame {
      */
     public static void main(String args[]) throws Exception {
         System.out.println("Starting...");
-
         InetAddress myIP = InetAddress.getLocalHost();
-
-        /* public String getHostAddress(): Returns the IP 
-       * address string in textual presentation.
-         */
-        System.out.println("My IP Address is:");
-        System.out.println(myIP.getHostAddress());
-
-        ExecutorService exec = Executors.newFixedThreadPool(1);
-
-        Blynk blynk = new Blynk();
+        System.out.println("ip " + myIP.getHostAddress());
+        System.out.println("hostname sentry");
 
         for (int i = 0; i < args.length; i++) {
             String p = args[i];
@@ -41,11 +32,15 @@ public class TestFrame {
                 String k = p.substring(0, c);
                 if (k.startsWith("--")) {
                     String v = p.substring(c + 1);
-                    System.out.println("config " + k + ": " + v);
+                    System.out.println("config " + k + "=" + v);
                     System.setProperty(k.substring(2), v);
                 }
             }
         }
+
+        ExecutorService exec = Executors.newFixedThreadPool(1);
+
+        Blynk blynk = new Blynk();
 
         exec.submit(() -> {
             try {
