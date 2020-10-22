@@ -72,6 +72,7 @@ public class TestFrame {
 
         Controller[] list = ControllerEnvironment.getDefaultEnvironment().getControllers();
         for (int i = 0; i < list.length; i++) {
+            System.out.println(list[i].getPortType() + ":" + list[i].getName());
             if (list[i].getPortType().equals(Controller.PortType.GAME)) {
                 joystick = list[i];
             }
