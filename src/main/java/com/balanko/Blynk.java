@@ -4,14 +4,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
-import org.eclipse.jetty.server.HttpConfiguration;
-import org.eclipse.jetty.server.HttpConnectionFactory;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.ServerConnector;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -40,9 +34,6 @@ public class Blynk {
 
     public Blynk() throws Exception {
 
-        
-        startServer();
-        
         port = new SerialPort(System.getProperty("port"));
 
         System.out.println("port open: " + port.openPort());
@@ -106,47 +97,6 @@ public class Blynk {
                 }
             }
         });
-    }
-    
-    
-    private void startServer() {
-
-         new Thread() {
-            @Override
-            public void run() {
-
-                try{
-                
-                    /**
-                     * start web server
-                     */
-                    Server server = new Server();
-
-                    // Handler
-                    server.setHandler(new WebHandler(Blynk.this));
-
-                    // HTTP Configuration
-                    HttpConfiguration httpConfig = new HttpConfiguration();
-                    // httpConfig.setOutputBufferSize(32 * 1024);
-                    // httpConfig.setRequestHeaderSize(8 * 1024);
-                    // httpConfig.setResponseHeaderSize(8 * 1024);
-                    httpConfig.setSendServerVersion(false);
-                    httpConfig.setSendDateHeader(false);
-
-                    // === jetty-http.xml ===
-                    ServerConnector connector = new ServerConnector(server, new HttpConnectionFactory(httpConfig));
-                    connector.setPort(8080);
-                    connector.setIdleTimeout(30_000);
-                    server.addConnector(connector);
-
-                    server.start();
-                    server.join();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }.start();
-
     }
 
     long counter = 0;

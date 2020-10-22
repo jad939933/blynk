@@ -45,9 +45,7 @@ public class TestFrame {
         exec.submit(() -> {
             try {
                 blynk.send("on");
-                blynk.send("move", Coordinates.position(2));
-                blynk.send("light", 20_000);
-                blynk.send("move", Coordinates.position(1));
+                blynk.send("move", "1000", "1000");
                 blynk.sendAndGetResponse("off");
 
             } catch (Exception ex) {
@@ -56,5 +54,40 @@ public class TestFrame {
             }
         });
 
+//           new Thread() {
+//            @Override
+//            public void run() {
+//
+//                try{
+//                
+//                    /**
+//                     * start web server
+//                     */
+//                    Server server = new Server();
+//
+//                    // Handler
+//                    server.setHandler(new WebHandler(Blynk.this));
+//
+//                    // HTTP Configuration
+//                    HttpConfiguration httpConfig = new HttpConfiguration();
+//                    // httpConfig.setOutputBufferSize(32 * 1024);
+//                    // httpConfig.setRequestHeaderSize(8 * 1024);
+//                    // httpConfig.setResponseHeaderSize(8 * 1024);
+//                    httpConfig.setSendServerVersion(false);
+//                    httpConfig.setSendDateHeader(false);
+//
+//                    // === jetty-http.xml ===
+//                    ServerConnector connector = new ServerConnector(server, new HttpConnectionFactory(httpConfig));
+//                    connector.setPort(8080);
+//                    connector.setIdleTimeout(30_000);
+//                    server.addConnector(connector);
+//
+//                    server.start();
+//                    server.join();
+//                } catch (Exception ex) {
+//                    ex.printStackTrace();
+//                }
+//            }
+//        }.start();
     }
 }
