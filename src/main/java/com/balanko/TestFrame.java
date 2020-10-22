@@ -6,8 +6,6 @@
 package com.balanko;
 
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import net.java.games.input.Component;
@@ -64,7 +62,8 @@ public class TestFrame {
             public void controllerAdded(ControllerEvent ce) {
                 System.out.println("added controoller " + ce.getController().getName());
 
-                if (ce.getController().getPortType().equals(Controller.PortType.GAME)) {
+                Controller c = ce.getController();
+                if (c.getPortType().equals(Controller.PortType.UNKNOWN) && c.getName().equalsIgnoreCase("Wireless Controller")) {
                     joystick = ce.getController();
                 }
             }
@@ -72,8 +71,9 @@ public class TestFrame {
 
         Controller[] list = ControllerEnvironment.getDefaultEnvironment().getControllers();
         for (int i = 0; i < list.length; i++) {
-            System.out.println(list[i].getPortType() + ":" + list[i].getName());
-            if (list[i].getPortType().equals(Controller.PortType.GAME)) {
+            Controller c = list[i];
+            System.out.println(c.getPortType() + ":" + c.getName());
+            if (c.getPortType().equals(Controller.PortType.UNKNOWN) && c.getName().equalsIgnoreCase("Wireless Controller")) {
                 joystick = list[i];
             }
         }
