@@ -119,9 +119,9 @@ public class TestFrame {
 
                             if (x != -1 && y != -1) {
                                 blynk.send("acc", String.valueOf(x), String.valueOf(y));
-                            }else if(x!=-1){
+                            } else if (x != -1) {
                                 blynk.send("accx", String.valueOf(x));
-                            }else if(y!=-1){
+                            } else if (y != -1) {
                                 blynk.send("accy", String.valueOf(y));
                             }
 
