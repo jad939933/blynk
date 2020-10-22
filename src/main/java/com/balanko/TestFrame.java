@@ -11,6 +11,8 @@ import java.util.concurrent.Executors;
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
+import net.java.games.input.ControllerEvent;
+import net.java.games.input.ControllerListener;
 import net.java.games.input.Event;
 import net.java.games.input.EventQueue;
 
@@ -47,53 +49,39 @@ public class TestFrame {
 
         Blynk blynk = new Blynk();
 
-        exec.submit(() -> {
-            try {
-                blynk.send("on");
-                blynk.send("move", "1000", "1000");
-                blynk.sendAndGetResponse("off");
+//        exec.submit(() -> {
+//            try {
+//                blynk.send("on");
+//                blynk.send("move", "1000", "1000");
+//                blynk.sendAndGetResponse("off");
+//
+//            } catch (Exception ex) {
+//                ex.printStackTrace();
+//            } finally {
+//            }
+//        });
 
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            } finally {
+        /* Create an event object for the underlying plugin to populate */
+
+ /* Get the available controllers */
+        ControllerEnvironment.getDefaultEnvironment().addControllerListener(new ControllerListener() {
+            @Override
+            public void controllerRemoved(ControllerEvent ce) {
+                System.out.println("removed controoller " + ce.getController().getName());
+            }
+
+            @Override
+            public void controllerAdded(ControllerEvent ce) {
+                System.out.println("added controoller " + ce.getController().getName());
             }
         });
 
-        /* Create an event object for the underlying plugin to populate */
-        Event event = new Event();
-
-        /* Get the available controllers */
         Controller[] controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
         for (int i = 0; i < controllers.length; i++) {
 
             Controller c = controllers[i];
 
-            new Thread() {
-                public void run() {
-                    try {
-
-                        while (true) {
-                            /* Remember to poll each one */
-                            c.poll();
-
-                            /* Get the controllers event queue */
-                            EventQueue queue = c.getEventQueue();
-
-                            /* For each object in the queue */
-                            while (queue.getNextEvent(event)) {
-                                /* Get event component */
-                                Component comp = event.getComponent();
-
-                                System.err.println(comp);
-
-                            }
-                        }
-
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            }.start();
+            enableController(c);
         }
 
 //           new Thread() {
@@ -131,5 +119,43 @@ public class TestFrame {
 //                }
 //            }
 //        }.start();
+    }
+
+    private static void enableController(Controller c) {
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+
+                    Event event = new Event();
+
+                    while (true) {
+
+                        /* Remember to poll each one */
+                        System.out.println(c.poll());
+
+                        /* Get the controllers event queue */
+                        EventQueue queue = c.getEventQueue();
+
+                        /* For each object in the queue */
+                        while (queue.getNextEvent(event)) {
+                            /* Get event component */
+                            Component comp = event.getComponent();
+
+                            System.err.println(comp.getIdentifier().getName() + ":" + comp.getPollData());
+
+//                                    blynk.send("on");
+//                blynk.send("move", "1000", "1000");
+//                blynk.sendAndGetResponse("off");
+                        }
+                        System.err.print(".");
+                        System.err.flush();
+                    }
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }.start();
     }
 }
