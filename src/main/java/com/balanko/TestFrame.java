@@ -95,6 +95,8 @@ public class TestFrame {
                             /* Get the controllers event queue */
                             EventQueue queue = joystick.getEventQueue();
 
+                            float x = -1;
+                            float y = -1;
 
                             /* For each object in the queue */
                             while (queue.getNextEvent(event)) {
@@ -103,10 +105,26 @@ public class TestFrame {
 
                                 System.err.println(comp.getIdentifier().getName() + ":" + comp.getPollData());
 
-//                                    blynk.send("on");
-//                blynk.send("move", "1000", "1000");
-//                blynk.sendAndGetResponse("off");
+                                switch (comp.getIdentifier().getName().toLowerCase()) {
+                                    case "x": {
+                                        x = comp.getPollData();
+                                    }
+                                    break;
+                                    case "y": {
+                                        y = comp.getPollData();
+                                    }
+                                    break;
+                                }
                             }
+
+                            if (x != -1 && y != -1) {
+                                blynk.send("acc", String.valueOf(x), String.valueOf(y));
+                            }else if(x!=-1){
+                                blynk.send("accx", String.valueOf(x));
+                            }else if(y!=-1){
+                                blynk.send("accy", String.valueOf(y));
+                            }
+
                         }
                         Thread.sleep(18);
                     }
