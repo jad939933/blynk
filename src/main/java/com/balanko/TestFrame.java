@@ -6,6 +6,8 @@
 package com.balanko;
 
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import net.java.games.input.Component;
@@ -21,6 +23,8 @@ import net.java.games.input.EventQueue;
  * @author dev
  */
 public class TestFrame {
+
+    static Controller joystick = null;
 
     /**
      * @param args the command line arguments
@@ -49,40 +53,68 @@ public class TestFrame {
 
         Blynk blynk = new Blynk();
 
-//        exec.submit(() -> {
-//            try {
-//                blynk.send("on");
-//                blynk.send("move", "1000", "1000");
-//                blynk.sendAndGetResponse("off");
-//
-//            } catch (Exception ex) {
-//                ex.printStackTrace();
-//            } finally {
-//            }
-//        });
-
-        /* Create an event object for the underlying plugin to populate */
-
- /* Get the available controllers */
         ControllerEnvironment.getDefaultEnvironment().addControllerListener(new ControllerListener() {
             @Override
             public void controllerRemoved(ControllerEvent ce) {
                 System.out.println("removed controoller " + ce.getController().getName());
+
             }
 
             @Override
             public void controllerAdded(ControllerEvent ce) {
                 System.out.println("added controoller " + ce.getController().getName());
+
+                if (ce.getController().getPortType().equals(Controller.PortType.GAME)) {
+                    joystick = ce.getController();
+                }
             }
         });
 
-        Controller[] controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
-        for (int i = 0; i < controllers.length; i++) {
-
-            Controller c = controllers[i];
-
-            enableController(c);
+        Controller[] list = ControllerEnvironment.getDefaultEnvironment().getControllers();
+        for (int i = 0; i < list.length; i++) {
+            if (list[i].getPortType().equals(Controller.PortType.GAME)) {
+                joystick = list[i];
+            }
         }
+
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+
+                    Event event = new Event();
+
+                    while (true) {
+
+                        if (joystick != null) {
+
+                            /* Remember to poll each one */
+                            joystick.poll();
+
+                            /* Get the controllers event queue */
+                            EventQueue queue = joystick.getEventQueue();
+
+
+                            /* For each object in the queue */
+                            while (queue.getNextEvent(event)) {
+                                /* Get event component */
+                                Component comp = event.getComponent();
+
+                                System.err.println(comp.getIdentifier().getName() + ":" + comp.getPollData());
+
+//                                    blynk.send("on");
+//                blynk.send("move", "1000", "1000");
+//                blynk.sendAndGetResponse("off");
+                            }
+                        }
+                        Thread.sleep(18);
+                    }
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }.start();
 
 //           new Thread() {
 //            @Override
@@ -121,41 +153,4 @@ public class TestFrame {
 //        }.start();
     }
 
-    private static void enableController(Controller c) {
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-
-                    Event event = new Event();
-
-                    while (true) {
-
-                        /* Remember to poll each one */
-                        System.out.println(c.poll());
-
-                        /* Get the controllers event queue */
-                        EventQueue queue = c.getEventQueue();
-
-                        /* For each object in the queue */
-                        while (queue.getNextEvent(event)) {
-                            /* Get event component */
-                            Component comp = event.getComponent();
-
-                            System.err.println(comp.getIdentifier().getName() + ":" + comp.getPollData());
-
-//                                    blynk.send("on");
-//                blynk.send("move", "1000", "1000");
-//                blynk.sendAndGetResponse("off");
-                        }
-                        System.err.print(".");
-                        System.err.flush();
-                    }
-
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }.start();
-    }
 }
