@@ -65,19 +65,35 @@ public class TestFrame {
         /* Get the available controllers */
         Controller[] controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
         for (int i = 0; i < controllers.length; i++) {
-            /* Remember to poll each one */
-            controllers[i].poll();
 
-            /* Get the controllers event queue */
-            EventQueue queue = controllers[i].getEventQueue();
+            Controller c = controllers[i];
 
-            /* For each object in the queue */
-            while (queue.getNextEvent(event)) {
-                /* Get event component */
-                Component comp = event.getComponent();
+            new Thread() {
+                public void run() {
+                    try {
 
-                System.err.println(comp);
-            }
+                        while (true) {
+                            /* Remember to poll each one */
+                            c.poll();
+
+                            /* Get the controllers event queue */
+                            EventQueue queue = c.getEventQueue();
+
+                            /* For each object in the queue */
+                            while (queue.getNextEvent(event)) {
+                                /* Get event component */
+                                Component comp = event.getComponent();
+
+                                System.err.println(comp);
+
+                            }
+                        }
+
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }.start();
         }
 
 //           new Thread() {
