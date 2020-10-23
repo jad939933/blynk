@@ -95,16 +95,12 @@ public class TestFrame {
                             /* Get the controllers event queue */
                             EventQueue queue = joystick.getEventQueue();
 
-                            float x = -1;
-                            float y = -1;
+                            float x = -2;
+                            float y = -2;
 
-                            /* For each object in the queue */
                             while (queue.getNextEvent(event)) {
-                                /* Get event component */
                                 Component comp = event.getComponent();
-
                                 System.err.println(comp.getIdentifier().getName() + ":" + comp.getPollData());
-
                                 switch (comp.getIdentifier().getName().toLowerCase()) {
                                     case "x": {
                                         x = comp.getPollData();
@@ -117,12 +113,13 @@ public class TestFrame {
                                 }
                             }
 
-                            if (x != -1 && y != -1) {
-                                blynk.send("acc", String.valueOf(x), String.valueOf(y));
-                            } else if (x != -1) {
-                                blynk.send("accx", String.valueOf(x));
-                            } else if (y != -1) {
-                                blynk.send("accy", String.valueOf(y));
+                            if (x != -2 && y != -2) {
+//                                blynk.send("acc", String.valueOf(x), String.valueOf(y));
+                                blynk.send("move", String.valueOf((int) (x * 5000)), String.valueOf((int) (y * 5000)));
+                            } else if (x != -2) {
+                                blynk.send("move", String.valueOf((int) (x * 5000)), "0");
+                            } else if (y != -2) {
+                                blynk.send("move", "0", String.valueOf((int) (y * 5000)));
                             }
 
                         }
