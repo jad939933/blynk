@@ -70,10 +70,9 @@ public class TestFrame {
                             EventQueue queue = joystick.getEventQueue();
 
                             while (queue.getNextEvent(event)) {
-
                                 eventCount++;
-
                                 Component comp = event.getComponent();
+                                System.err.println(comp);
                                 switch (comp.getIdentifier().getName().toLowerCase()) {
                                     case "x": {
                                         x[0] = comp.getPollData();
@@ -97,10 +96,10 @@ public class TestFrame {
                                 Controller[] list = ControllerEnvironment.getDefaultEnvironment().getControllers();
                                 for (int i = 0; i < list.length; i++) {
                                     Controller c = list[i];
-                                    System.out.println(c.getPortType() + ":" + c.getName());
                                     if (c.getPortType().equals(Controller.PortType.UNKNOWN) && c.getName().equalsIgnoreCase("Wireless Controller")) {
                                         System.err.println("Adding joystick " + c.getName());
                                         joystick = list[i];
+                                        break;
                                     }
                                 }
                             }
