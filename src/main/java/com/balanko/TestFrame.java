@@ -121,7 +121,7 @@ public class TestFrame {
 
                         blynk.send("move", String.valueOf((int) (x[0] * 1000)), String.valueOf((int) (y[0] * 1000)));
 
-                        Thread.sleep(1_000);
+                        Thread.sleep(100);
                     }
 
                 } catch (Exception ex) {
