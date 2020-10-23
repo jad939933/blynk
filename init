@@ -4,10 +4,14 @@
 #
 # Starts blynk
 #
-# chkconfig: 345 95 5
-# description: starts
-# processname: blynk
-
+### BEGIN INIT INFO
+# Provides:          blynk
+# Required-Start:    $all
+# Required-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:
+# Short-Description: blynk service...
+### END INIT INFO
 
 PID=0
 RETVAL=0
@@ -22,12 +26,12 @@ VERSION="-1.0-SNAPSHOT.jar"
 
 start() {
     #require: sudo apt-get install libjinput-java libjinput-jni
-    sudo java $OPTS -cp /usr/share/java/*:$DIR/target/$PROG$VERSION:$DIR/target/dependency/* com.balanko.TestFrame --port=/dev/ttyS0 # > /var/log/$PROG/out 2> /var/log/$PROG/err &
+    sudo java $OPTS -cp /usr/share/java/*:$DIR/target/$PROG$VERSION:$DIR/target/dependency/* com.balanko.TestFrame --port=/dev/ttyS0 > /var/log/$PROG/out 2> /var/log/$PROG/err &
     return $RETVAL
 }
 
 stop() {
-    pgrep -u $USER -f $PROG-ws | xargs kill -9
+    sudo killall -9 java
     return $RETVAL
 }
 
