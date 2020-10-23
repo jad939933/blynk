@@ -6,9 +6,6 @@
 package com.balanko;
 
 import java.net.InetAddress;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
@@ -48,36 +45,7 @@ public class TestFrame {
             }
         }
 
-        ExecutorService exec = Executors.newFixedThreadPool(1);
-
         Blynk blynk = new Blynk();
-
-        ControllerEnvironment.getDefaultEnvironment().addControllerListener(new ControllerListener() {
-            @Override
-            public void controllerRemoved(ControllerEvent ce) {
-                System.out.println("removed controoller " + ce.getController().getName());
-
-            }
-
-            @Override
-            public void controllerAdded(ControllerEvent ce) {
-                System.out.println("added controoller " + ce.getController().getName());
-
-                Controller c = ce.getController();
-                if (c.getPortType().equals(Controller.PortType.UNKNOWN) && c.getName().equalsIgnoreCase("Wireless Controller")) {
-                    joystick = ce.getController();
-                }
-            }
-        });
-
-        Controller[] list = ControllerEnvironment.getDefaultEnvironment().getControllers();
-        for (int i = 0; i < list.length; i++) {
-            Controller c = list[i];
-            System.out.println(c.getPortType() + ":" + c.getName());
-            if (c.getPortType().equals(Controller.PortType.UNKNOWN) && c.getName().equalsIgnoreCase("Wireless Controller")) {
-                joystick = list[i];
-            }
-        }
 
         float[] x = {0};
         float[] y = {0};
@@ -89,7 +57,11 @@ public class TestFrame {
 
                     Event event = new Event();
 
+                    long start = System.currentTimeMillis();
+
                     while (true) {
+
+                        int eventCount = 0;
 
                         if (joystick != null) {
 
@@ -100,8 +72,10 @@ public class TestFrame {
                             EventQueue queue = joystick.getEventQueue();
 
                             while (queue.getNextEvent(event)) {
+
+                                eventCount++;
+
                                 Component comp = event.getComponent();
-                                System.err.println(comp.getIdentifier().getName() + ":" + comp.getPollData());
                                 switch (comp.getIdentifier().getName().toLowerCase()) {
                                     case "x": {
                                         x[0] = comp.getPollData();
@@ -113,9 +87,24 @@ public class TestFrame {
                                     break;
                                 }
                             }
-
                         }
+
                         Thread.sleep(18);
+                        /**
+                         *
+                         */
+                        if (System.currentTimeMillis() - start > 10_000) {
+                            if (eventCount == 0) {
+                                Controller[] list = ControllerEnvironment.getDefaultEnvironment().getControllers();
+                                for (int i = 0; i < list.length; i++) {
+                                    Controller c = list[i];
+                                    System.out.println(c.getPortType() + ":" + c.getName());
+                                    if (c.getPortType().equals(Controller.PortType.UNKNOWN) && c.getName().equalsIgnoreCase("Wireless Controller")) {
+                                        joystick = list[i];
+                                    }
+                                }
+                            }
+                        }
                     }
 
                 } catch (Exception ex) {
@@ -133,7 +122,7 @@ public class TestFrame {
 
                     while (true) {
 
-                        blynk.send("move", String.valueOf((int) (x[0] * 5000)), String.valueOf((int) (y[0] * 5000)));
+                        blynk.send("move", String.valueOf((int) (x[0] * 1000)), String.valueOf((int) (y[0] * 1000)));
 
                         Thread.sleep(1_000);
                     }
