@@ -5,8 +5,8 @@
  */
 package com.balanko;
 
+import java.lang.ModuleLayer.Controller;
 import java.net.InetAddress;
-import net.java.games.input.Controller;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Server;
@@ -45,87 +45,6 @@ public class TestFrame {
 
         Blynk blynk = new Blynk();
 
-        float[] x = {0};
-        float[] y = {0};
-
-//        new Thread() {
-//            @Override
-//            public void run() {
-//                try {
-//
-//                    Event event = new Event();
-//
-//                    long start = 0;
-//
-//                    while (true) {
-//
-//                        if (joystick != null) {
-//
-//                            /* Remember to poll each one */
-//                            joystick.poll();
-//
-//                            /* Get the controllers event queue */
-//                            EventQueue queue = joystick.getEventQueue();
-//
-//                            while (queue.getNextEvent(event)) {
-//
-//                                start = System.currentTimeMillis();
-//
-//                                Component comp = event.getComponent();
-//                                System.err.println(comp);
-//                                switch (comp.getIdentifier().getName().toLowerCase()) {
-//                                    case "x": {
-//                                        x[0] = comp.getPollData();
-//                                    }
-//                                    break;
-//                                    case "y": {
-//                                        y[0] = comp.getPollData();
-//                                    }
-//                                    break;
-//                                }
-//                            }
-//                        }
-//
-//                        Thread.sleep(20);
-//                        /**
-//                         *
-//                         */
-//                        if (System.currentTimeMillis() - start > 20_000) {
-//                            System.out.println("scanning for a joystick...");
-//                            start = System.currentTimeMillis();
-//                            Controller[] list = ControllerEnvironment.getDefaultEnvironment().getControllers();
-//                            for (int i = 0; i < list.length; i++) {
-//                                Controller c = list[i];
-//                                if (c.getPortType().equals(Controller.PortType.UNKNOWN) && c.getName().equalsIgnoreCase("Wireless Controller")) {
-//                                    System.err.println("Adding joystick " + c.getName());
-//                                    joystick = list[i];
-//                                    break;
-//                                }
-//                            }
-//                        }
-//                    }
-//
-//                } catch (Exception ex) {
-//                    ex.printStackTrace();
-//                }
-//            }
-//        }.start();
-//
-//        new Thread() {
-//            @Override
-//            public void run() {
-//                try {
-//
-//                    while (true) {
-//                        blynk.send("on", String.valueOf((int) (x[0] * 1000)), String.valueOf((int) (y[0] * 1000)));
-//                        Thread.sleep(100);
-//                    }
-//
-//                } catch (Exception ex) {
-//                    ex.printStackTrace();
-//                }
-//            }
-//        }.start();
         new Thread() {
             @Override
             public void run() {
