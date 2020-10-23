@@ -38,7 +38,7 @@ public class Blynk {
 
         System.out.println("port open: " + port.openPort());
 
-        port.setParams(115200, 8, 1, 0, true, true);
+        port.setParams(57600, 8, 1, 0, true, true);
 
         port.addEventListener((SerialPortEvent spe) -> {
             try {

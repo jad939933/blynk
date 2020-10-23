@@ -91,6 +91,7 @@ public class TestFrame {
                          *
                          */
                         if (System.currentTimeMillis() - start > 20_000) {
+                            System.out.println("scanning for a joystick...");
                             start = System.currentTimeMillis();
                             Controller[] list = ControllerEnvironment.getDefaultEnvironment().getControllers();
                             for (int i = 0; i < list.length; i++) {
