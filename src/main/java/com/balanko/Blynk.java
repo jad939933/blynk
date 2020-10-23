@@ -38,7 +38,7 @@ public class Blynk {
 
         System.out.println("port open: " + port.openPort());
 
-        port.setParams(115200, 8, 1, 0, true, true);
+        port.setParams(115200, 8, 1, 0);
 
         port.addEventListener((SerialPortEvent spe) -> {
             try {
@@ -125,7 +125,7 @@ public class Blynk {
         for (Object param : params) {
             command.append(" ").append(param);
         }
-        System.out.println(">>: " + command);
+        System.out.println("SEND: " + command);
         port.writeString(command.toString() + "\r\n");
 
         c.received.await(1, TimeUnit.MINUTES);
