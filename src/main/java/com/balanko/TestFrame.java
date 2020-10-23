@@ -115,12 +115,8 @@ public class TestFrame {
             public void run() {
                 try {
 
-                    Event event = new Event();
-
                     while (true) {
-
                         blynk.send("move", String.valueOf((int) (x[0] * 1000)), String.valueOf((int) (y[0] * 1000)));
-
                         Thread.sleep(100);
                     }
 
