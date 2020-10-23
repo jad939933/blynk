@@ -55,11 +55,9 @@ public class TestFrame {
 
                     Event event = new Event();
 
-                    long start = System.currentTimeMillis();
+                    long start = 0;
 
                     while (true) {
-
-                        int eventCount = 0;
 
                         if (joystick != null) {
 
@@ -70,7 +68,9 @@ public class TestFrame {
                             EventQueue queue = joystick.getEventQueue();
 
                             while (queue.getNextEvent(event)) {
-                                eventCount++;
+
+                                start = System.currentTimeMillis();
+
                                 Component comp = event.getComponent();
                                 System.err.println(comp);
                                 switch (comp.getIdentifier().getName().toLowerCase()) {
@@ -86,21 +86,19 @@ public class TestFrame {
                             }
                         }
 
-                        Thread.sleep(18);
+                        Thread.sleep(20);
                         /**
                          *
                          */
-                        if (System.currentTimeMillis() - start > 10_000) {
+                        if (System.currentTimeMillis() - start > 20_000) {
                             start = System.currentTimeMillis();
-                            if (eventCount == 0) {
-                                Controller[] list = ControllerEnvironment.getDefaultEnvironment().getControllers();
-                                for (int i = 0; i < list.length; i++) {
-                                    Controller c = list[i];
-                                    if (c.getPortType().equals(Controller.PortType.UNKNOWN) && c.getName().equalsIgnoreCase("Wireless Controller")) {
-                                        System.err.println("Adding joystick " + c.getName());
-                                        joystick = list[i];
-                                        break;
-                                    }
+                            Controller[] list = ControllerEnvironment.getDefaultEnvironment().getControllers();
+                            for (int i = 0; i < list.length; i++) {
+                                Controller c = list[i];
+                                if (c.getPortType().equals(Controller.PortType.UNKNOWN) && c.getName().equalsIgnoreCase("Wireless Controller")) {
+                                    System.err.println("Adding joystick " + c.getName());
+                                    joystick = list[i];
+                                    break;
                                 }
                             }
                         }
