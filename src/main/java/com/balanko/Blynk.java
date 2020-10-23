@@ -125,7 +125,7 @@ public class Blynk {
         for (Object param : params) {
             command.append(" ").append(param);
         }
-        System.out.println("SEND: " + command);
+        System.out.println(">>: " + command);
         port.writeString(command.toString() + "\r\n");
 
         c.received.await(1, TimeUnit.MINUTES);
