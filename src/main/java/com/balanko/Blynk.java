@@ -133,6 +133,7 @@ public class Blynk {
         return c;
 
     }
+
     synchronized C sendq(String cmd, Object... params) throws Exception {
 
         String txid = Long.toHexString(counter++);
@@ -150,11 +151,10 @@ public class Blynk {
         for (Object param : params) {
             command.append(" ").append(param);
         }
-        System.out.println("SEND: " + command);
+        System.out.println("QSEND: " + command);
         port.writeString(command.toString() + "\r\n");
 
 //        c.received.await(1, TimeUnit.MINUTES);
-
         return c;
 
     }

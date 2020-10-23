@@ -8,6 +8,7 @@ package com.balanko;
 import java.net.InetAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
@@ -78,6 +79,9 @@ public class TestFrame {
             }
         }
 
+        float[] x = {0};
+        float[] y = {0};
+
         new Thread() {
             @Override
             public void run() {
@@ -95,35 +99,43 @@ public class TestFrame {
                             /* Get the controllers event queue */
                             EventQueue queue = joystick.getEventQueue();
 
-                            float x = -2;
-                            float y = -2;
-
                             while (queue.getNextEvent(event)) {
                                 Component comp = event.getComponent();
                                 System.err.println(comp.getIdentifier().getName() + ":" + comp.getPollData());
                                 switch (comp.getIdentifier().getName().toLowerCase()) {
                                     case "x": {
-                                        x = comp.getPollData();
+                                        x[0] = comp.getPollData();
                                     }
                                     break;
                                     case "y": {
-                                        y = comp.getPollData();
+                                        y[0] = comp.getPollData();
                                     }
                                     break;
                                 }
                             }
 
-                            if (x != -2 && y != -2) {
-//                                blynk.send("acc", String.valueOf(x), String.valueOf(y));
-                                blynk.send("move", String.valueOf((int) (x * 5000)), String.valueOf((int) (y * 5000)));
-                            } else if (x != -2) {
-                                blynk.send("move", String.valueOf((int) (x * 5000)), "0");
-                            } else if (y != -2) {
-                                blynk.send("move", "0", String.valueOf((int) (y * 5000)));
-                            }
-
                         }
                         Thread.sleep(18);
+                    }
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }.start();
+
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+
+                    Event event = new Event();
+
+                    while (true) {
+
+                        blynk.sendq("move", String.valueOf((int) (x[0] * 5000)), String.valueOf((int) (y[0] * 5000)));
+
+                        Thread.sleep(100);
                     }
 
                 } catch (Exception ex) {
