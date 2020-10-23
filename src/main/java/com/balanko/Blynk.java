@@ -133,6 +133,31 @@ public class Blynk {
         return c;
 
     }
+    synchronized C sendq(String cmd, Object... params) throws Exception {
+
+        String txid = Long.toHexString(counter++);
+
+        C c = new C();
+        callbacks.put(txid, c);
+
+        StringBuilder command = new StringBuilder();
+        command.append(txid);
+        command.append(" ");
+        command.append(cmd);
+        if (params == null || params.length == 0) {
+            params = new Object[]{"0", "0"};
+        }
+        for (Object param : params) {
+            command.append(" ").append(param);
+        }
+        System.out.println("SEND: " + command);
+        port.writeString(command.toString() + "\r\n");
+
+//        c.received.await(1, TimeUnit.MINUTES);
+
+        return c;
+
+    }
 
     /**
      *
