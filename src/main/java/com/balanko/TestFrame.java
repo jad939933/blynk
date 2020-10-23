@@ -133,9 +133,9 @@ public class TestFrame {
 
                     while (true) {
 
-                        blynk.sendq("move", String.valueOf((int) (x[0] * 5000)), String.valueOf((int) (y[0] * 5000)));
+                        blynk.send("move", String.valueOf((int) (x[0] * 5000)), String.valueOf((int) (y[0] * 5000)));
 
-                        Thread.sleep(100);
+                        Thread.sleep(1_000);
                     }
 
                 } catch (Exception ex) {
