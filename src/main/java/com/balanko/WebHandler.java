@@ -57,6 +57,22 @@ public class WebHandler extends AbstractHandler {
                     out.flush();
                 }
 
+            } else if (requestPath.startsWith("/on")) {
+
+                blynk.send("on", "0", "0");
+
+                JSONObject obj = new JSONObject();
+
+                byte bytes[] = obj.toString().getBytes();
+
+                servletResponse.setStatus(200);
+                servletResponse.setContentLength(bytes.length);
+
+                try (OutputStream out = servletResponse.getOutputStream()) {
+                    out.write(bytes);
+                    out.flush();
+                }
+
             } else if (requestPath.startsWith("/move")) {
 
                 int x = Integer.parseInt(req.getParameter("x"));
