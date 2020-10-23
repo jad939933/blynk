@@ -6,11 +6,11 @@
 package com.balanko;
 
 import java.net.InetAddress;
-import net.java.games.input.Component;
 import net.java.games.input.Controller;
-import net.java.games.input.ControllerEnvironment;
-import net.java.games.input.Event;
-import net.java.games.input.EventQueue;
+import org.eclipse.jetty.server.HttpConfiguration;
+import org.eclipse.jetty.server.HttpConnectionFactory;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
 
 /**
  *
@@ -110,58 +110,57 @@ public class TestFrame {
 //                }
 //            }
 //        }.start();
-
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-
-                    while (true) {
-                        blynk.send("on", String.valueOf((int) (x[0] * 1000)), String.valueOf((int) (y[0] * 1000)));
-                        Thread.sleep(100);
-                    }
-
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }.start();
-
-//           new Thread() {
+//
+//        new Thread() {
 //            @Override
 //            public void run() {
+//                try {
 //
-//                try{
-//                
-//                    /**
-//                     * start web server
-//                     */
-//                    Server server = new Server();
+//                    while (true) {
+//                        blynk.send("on", String.valueOf((int) (x[0] * 1000)), String.valueOf((int) (y[0] * 1000)));
+//                        Thread.sleep(100);
+//                    }
 //
-//                    // Handler
-//                    server.setHandler(new WebHandler(Blynk.this));
-//
-//                    // HTTP Configuration
-//                    HttpConfiguration httpConfig = new HttpConfiguration();
-//                    // httpConfig.setOutputBufferSize(32 * 1024);
-//                    // httpConfig.setRequestHeaderSize(8 * 1024);
-//                    // httpConfig.setResponseHeaderSize(8 * 1024);
-//                    httpConfig.setSendServerVersion(false);
-//                    httpConfig.setSendDateHeader(false);
-//
-//                    // === jetty-http.xml ===
-//                    ServerConnector connector = new ServerConnector(server, new HttpConnectionFactory(httpConfig));
-//                    connector.setPort(8080);
-//                    connector.setIdleTimeout(30_000);
-//                    server.addConnector(connector);
-//
-//                    server.start();
-//                    server.join();
 //                } catch (Exception ex) {
 //                    ex.printStackTrace();
 //                }
 //            }
 //        }.start();
+        new Thread() {
+            @Override
+            public void run() {
+
+                try {
+
+                    /**
+                     * start web server
+                     */
+                    Server server = new Server();
+
+                    // Handler
+                    server.setHandler(new WebHandler(blynk));
+
+                    // HTTP Configuration
+                    HttpConfiguration httpConfig = new HttpConfiguration();
+                    // httpConfig.setOutputBufferSize(32 * 1024);
+                    // httpConfig.setRequestHeaderSize(8 * 1024);
+                    // httpConfig.setResponseHeaderSize(8 * 1024);
+                    httpConfig.setSendServerVersion(false);
+                    httpConfig.setSendDateHeader(false);
+
+                    // === jetty-http.xml ===
+                    ServerConnector connector = new ServerConnector(server, new HttpConnectionFactory(httpConfig));
+                    connector.setPort(8080);
+                    connector.setIdleTimeout(30_000);
+                    server.addConnector(connector);
+
+                    server.start();
+                    server.join();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }.start();
     }
 
 }

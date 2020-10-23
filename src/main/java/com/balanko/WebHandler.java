@@ -57,14 +57,14 @@ public class WebHandler extends AbstractHandler {
                     out.flush();
                 }
 
-            } else if (requestPath.startsWith("/position")) {
+            } else if (requestPath.startsWith("/move")) {
 
                 int x = Integer.parseInt(req.getParameter("x"));
                 int y = Integer.parseInt(req.getParameter("y"));
 
-                blynk.sendAndGetResponse("on");
+//                blynk.sendAndGetResponse("on");
                 blynk.send("move", String.valueOf(x), String.valueOf(y));
-                blynk.sendAndGetResponse("off");
+//                blynk.sendAndGetResponse("off");
 
                 JSONObject obj = new JSONObject();
 
@@ -77,43 +77,8 @@ public class WebHandler extends AbstractHandler {
                     out.write(bytes);
                     out.flush();
                 }
-            } else if (requestPath.startsWith("/lighton")) {
-
-                int time = Integer.parseInt(req.getParameter("time"));
-
-                blynk.sendAndGetResponse("on");
-                blynk.sendAndGetResponse("light", time);
-                blynk.sendAndGetResponse("off");
-
-                JSONObject obj = new JSONObject();
-
-                byte bytes[] = obj.toString().getBytes();
-
-                servletResponse.setStatus(200);
-                servletResponse.setContentLength(bytes.length);
-
-                try (OutputStream out = servletResponse.getOutputStream()) {
-                    out.write(bytes);
-                    out.flush();
-                }
-            } else if (requestPath.startsWith("/home")) {
-
-                blynk.sendAndGetResponse("on");
-                blynk.sendAndGetResponse("home");
-                blynk.sendAndGetResponse("off");
-
-                JSONObject obj = new JSONObject();
-
-                byte bytes[] = obj.toString().getBytes();
-
-                servletResponse.setStatus(200);
-                servletResponse.setContentLength(bytes.length);
-
-                try (OutputStream out = servletResponse.getOutputStream()) {
-                    out.write(bytes);
-                    out.flush();
-                }
-
+            } else {
+                throw new Exception("Unexpected " + requestPath);
             }
 
         } catch (Exception ex) {
