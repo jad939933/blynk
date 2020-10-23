@@ -117,7 +117,7 @@ public class TestFrame {
                 try {
 
                     while (true) {
-                        blynk.send("move", String.valueOf((int) (x[0] * 1000)), String.valueOf((int) (y[0] * 1000)));
+                        blynk.send("on", String.valueOf((int) (x[0] * 1000)), String.valueOf((int) (y[0] * 1000)));
                         Thread.sleep(100);
                     }
 
