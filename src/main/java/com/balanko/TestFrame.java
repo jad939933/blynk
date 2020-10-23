@@ -9,8 +9,6 @@ import java.net.InetAddress;
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
-import net.java.games.input.ControllerEvent;
-import net.java.games.input.ControllerListener;
 import net.java.games.input.Event;
 import net.java.games.input.EventQueue;
 
@@ -94,12 +92,14 @@ public class TestFrame {
                          *
                          */
                         if (System.currentTimeMillis() - start > 10_000) {
+                            start = System.currentTimeMillis();
                             if (eventCount == 0) {
                                 Controller[] list = ControllerEnvironment.getDefaultEnvironment().getControllers();
                                 for (int i = 0; i < list.length; i++) {
                                     Controller c = list[i];
                                     System.out.println(c.getPortType() + ":" + c.getName());
                                     if (c.getPortType().equals(Controller.PortType.UNKNOWN) && c.getName().equalsIgnoreCase("Wireless Controller")) {
+                                        System.err.println("Adding joystick " + c.getName());
                                         joystick = list[i];
                                     }
                                 }
