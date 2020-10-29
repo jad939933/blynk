@@ -1,0 +1,113 @@
+
+#include <ESP8266WiFi.h>
+#include <BlynkSimpleEsp8266.h>
+#include <AccelStepper.h> 
+
+
+char auth[] = "GmZwmY8oqv_qodfO7eKlwKEuhDZc4cCD";
+
+char ssid[] = "d0";
+char pass[] = "1234567890";
+
+//AccelStepper stepper1(AccelStepper::DRIVER, D1, D2);
+
+//AccelStepper stepper2(AccelStepper::DRIVER, D5, D6);
+
+
+BLYNK_WRITE(V1) {
+  int x = param[0].asInt();
+  int y = param[1].asInt();
+
+  String str="|";
+  
+  if(abs(x)>3){
+    
+  //  stepper1.setMaxSpeed(abs(x)); 
+    str+="SPD 0 ";
+    str+=abs(x);
+    str+="|";
+    
+    if(x>0){
+      str+="MV 0 90000|";
+ //     stepper1.moveTo(+9000000);
+    }else{
+    //  stepper1.moveTo(-9000000);
+      str+="MV 0 -90000|";
+    }
+  }else{
+    //stepper1.stop();
+    str+="STP 0|";
+  }
+
+  if(abs(y)>3){
+    //stepper2.setMaxSpeed(abs(y));
+    str+="SPD 1 ";
+    str+=abs(y);
+    str+="|";
+    
+    if(y>0){
+      str+="MV 1 90000|";
+      //stepper2.moveTo(+9000000);
+    }else{
+      str+="MV 1 -90000|";
+      //stepper2.moveTo(-9000000);
+    }
+  }else{
+    //stepper2.stop();
+    str+="STP 1|";
+  }
+ 
+  Serial.println(str);
+}
+
+BLYNK_WRITE(V2) {
+  int acc = param[0].asInt();
+ // stepper1.setAcceleration(acc);
+
+  String str="|ACC 0 ";
+  str+=acc;
+  str+="|";
+  Serial.println(str);
+}
+
+
+BLYNK_WRITE(V3) {
+  int acc = param[0].asInt();
+//  stepper2.setAcceleration(acc); 
+  
+  String str="|ACC 1 ";
+  str+=acc;
+  str+="|";
+  Serial.println(str);
+}
+
+void setup()
+{ 
+  Serial.begin(9600); 
+
+  /*
+  pinMode(D1, OUTPUT);
+  digitalWrite(D1, LOW);
+  pinMode(D2, OUTPUT);
+  digitalWrite(D2, LOW);
+
+  pinMode(D5, OUTPUT);
+  digitalWrite(D5, LOW);
+  pinMode(D6, OUTPUT);
+  digitalWrite(D6, LOW);
+
+  stepper1.setAcceleration(800);
+
+  stepper2.setAcceleration(800);
+  */
+  Blynk.begin(auth, ssid, pass); 
+}
+
+void loop()
+{
+  Blynk.run();
+
+ // stepper1.run();
+
+ // stepper2.run();
+}

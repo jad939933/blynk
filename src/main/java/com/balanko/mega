@@ -1,0 +1,84 @@
+ 
+#include <AccelStepper.h> 
+
+AccelStepper s0(AccelStepper::DRIVER, 2, 4);
+AccelStepper s1(AccelStepper::DRIVER, 8, 10);
+
+AccelStepper steppers[]={s0, s1};
+
+void setup()
+{ 
+  Serial.begin(9600); 
+
+  pinMode(3, OUTPUT);
+  digitalWrite(3, HIGH);
+  pinMode(5, OUTPUT);
+  digitalWrite(5, HIGH);
+  pinMode(9, OUTPUT);
+  digitalWrite(9, HIGH);
+  pinMode(11, OUTPUT);
+  digitalWrite(11, HIGH);
+}
+
+
+String getValue(String data, char separator, int index)
+{
+  int found = 0;
+  int strIndex[] = {0, -1};
+  int maxIndex = data.length() - 1;
+
+  for (int i = 0; i <= maxIndex && found <= index; i++) {
+    if (data.charAt(i) == separator || i == maxIndex) {
+      found++;
+      strIndex[0] = strIndex[1] + 1;
+      strIndex[1] = (i == maxIndex) ? i + 1 : i;
+    }
+  }
+
+  return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
+}
+
+
+String buf;
+void loop()
+{ 
+
+  String str="";
+
+  if (Serial.available() > 0) {
+     int i=Serial.read();
+     char ch=i;
+     if(ch=='|'){
+        str=buf;
+        buf="";   
+     }else{
+      buf+=ch;
+     }
+  }
+
+  if(str.length()>2){
+   String instr=getValue(str, ' ', 0);
+   
+   if(instr=="MVTO"){
+       long int pos=getValue(str, ' ', 2).toInt();
+       steppers[getValue(str, ' ', 1).toInt()].moveTo(pos);
+   }else if(instr=="MV"){
+       long int pos=getValue(str, ' ', 2).toInt();
+       steppers[getValue(str, ' ', 1).toInt()].move(pos);
+   }else if(instr=="STP"){
+      steppers[getValue(str, ' ', 1).toInt()].stop();
+   }else if(instr=="ACC"){
+      steppers[getValue(str, ' ', 1).toInt()].setAcceleration(getValue(str, ' ', 2).toInt());
+   }else if(instr=="SPD"){
+      steppers[getValue(str, ' ', 1).toInt()].setMaxSpeed(getValue(str, ' ', 2).toInt());
+   }else if(instr=="SW"){
+       int pin=getValue(str, ' ', 1).toInt();
+       pinMode(pin, OUTPUT);
+       digitalWrite(pin, getValue(str, ' ', 2).toInt());
+   }
+  }
+
+   for(int i=0;i<2;i++){
+    steppers[i].run();
+  }
+}
