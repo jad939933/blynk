@@ -1,0 +1,38 @@
+!SESSION 2020-11-02 12:51:23.875 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.8.0_131
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Framework arguments:  -clearPersistedState
+Command-line arguments:  -os linux -ws gtk -arch x86_64 -clearPersistedState
+
+!ENTRY org.eclipse.ui 2 2 2020-11-02 12:51:52.205
+!MESSAGE Perspective with name 'Configuration perspective' and id 'com.digi.xctung.perspectives.configurationPerspective' has been made into a local copy
+
+!ENTRY org.eclipse.ui 2 2 2020-11-02 12:51:52.253
+!MESSAGE Invalid preference category path: org.eclipse.equinox.internal.p2.ui.sdk.ProvisioningPreferencePage (bundle: org.eclipse.equinox.p2.ui.sdk.scheduler, page: org.eclipse.equinox.internal.p2.ui.sdk.scheduler.AutomaticUpdatesPreferencePage)
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2020-11-02 12:52:07.450
+!MESSAGE Server returned lastModified <= 0 for ftp://ftp1.digi.com/support/XCTU-NG/java_18/repository/content.xml
+
+!ENTRY org.eclipse.ui 2 2 2020-11-02 13:02:22.481
+!MESSAGE Perspective with name 'Consoles perspective' and id 'com.digi.xctung.perspectives.consolesPerspective' has been made into a local copy
+!SESSION 2020-11-02 13:42:45.697 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.8.0_131
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Framework arguments:  -clearPersistedState
+Command-line arguments:  -os linux -ws gtk -arch x86_64 -clearPersistedState
+
+!ENTRY org.eclipse.ui 2 2 2020-11-02 13:43:14.125
+!MESSAGE Perspective with name 'Configuration perspective' and id 'com.digi.xctung.perspectives.configurationPerspective' has been made into a local copy
+
+!ENTRY org.eclipse.ui 2 2 2020-11-02 13:43:14.151
+!MESSAGE Invalid preference category path: org.eclipse.equinox.internal.p2.ui.sdk.ProvisioningPreferencePage (bundle: org.eclipse.equinox.p2.ui.sdk.scheduler, page: org.eclipse.equinox.internal.p2.ui.sdk.scheduler.AutomaticUpdatesPreferencePage)
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2020-11-02 13:44:13.708
+!MESSAGE Server returned lastModified <= 0 for ftp://ftp1.digi.com/support/XCTU-NG/java_18/repository/content.xml
+
+!ENTRY org.eclipse.ui 2 2 2020-11-02 13:45:07.134
+!MESSAGE Perspective with name 'Consoles perspective' and id 'com.digi.xctung.perspectives.consolesPerspective' has been made into a local copy
