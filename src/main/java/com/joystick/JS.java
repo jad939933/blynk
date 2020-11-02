@@ -26,9 +26,22 @@ public class JS {
 
     public static void main(String[] args) throws Exception {
 
+        for (int i = 0; i < args.length; i++) {
+            String p = args[i];
+            int c = p.indexOf("=");
+            if (c > 0) {
+                String k = p.substring(0, c);
+                if (k.startsWith("--")) {
+                    String v = p.substring(c + 1);
+                    System.out.println("config " + k + "=" + v);
+                    System.setProperty(k.substring(2), v);
+                }
+            }
+        }
+
         addr_64 = new XBee64BitAddress("00 13 A2 00 40 30 21 BA".replace(" ", ""));
 
-        uart = new XBeeDevice("/dev/ttyUSB0", 9600);
+        uart = new XBeeDevice(System.getProperty("xbee.port"), 9600);
         uart.open();
 
         System.out.println("UART open");
@@ -41,6 +54,7 @@ public class JS {
 
         for (int i = 0; i < controllers.length; i++) {
             Controller c = controllers[i];
+            System.err.println(c.getName() + "...");
             if (c.getName().equalsIgnoreCase("Sony Computer Entertainment Wireless Controller")) {
                 joystick = c;
                 System.err.println(c.getName());
