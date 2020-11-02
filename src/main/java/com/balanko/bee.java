@@ -11,7 +11,7 @@ import com.digi.xbee.api.models.XBee16BitAddress;
 import com.digi.xbee.api.models.XBee64BitAddress;
 import com.digi.xbee.api.packet.XBeePacket;
 import com.digi.xbee.api.packet.common.RemoteATCommandPacket;
-import com.fazecast.jSerialComm.SerialPort;
+//import com.fazecast.jSerialComm.SerialPort;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -50,81 +50,81 @@ public class bee {
 
     public static void main3(String[] args) throws Exception {
 
-        SerialPort port = null;
-        for (SerialPort p : SerialPort.getCommPorts()) {
-            System.out.println(">>" + p);
-            if (p.toString().toLowerCase().contains("uart")) {
-                port = p;
-            }
-        }
-
-        if (port == null) {
-            System.err.println("no port");
-            System.exit(0);
-        }
-
-        if (port.openPort(2000)) {
-
-//            port.setBaudRate(9600);
-            System.err.println("port open");
-
-            out = port.getOutputStream();
-
-            in = port.getInputStream();
-
-//            exec("+++");
-////
-//            System.err.println(exec("AT\r"));
-//            for (String w : ("ATRE\nATID 3001\n"
-//                    + "ATMY 1\n"
-//                    + "ATDH 0\n"
-//                    + "ATDL 2\n"
-//                    + "ATWR\nATAP\n").split("\n")) {
-//
-//                System.out.println(">>" + w + " " + exec(w + "\r"));
-//
+//        SerialPort port = null;
+//        for (SerialPort p : SerialPort.getCommPorts()) {
+//            System.out.println(">>" + p);
+//            if (p.toString().toLowerCase().contains("uart")) {
+//                port = p;
 //            }
-//            for (String w : ("ATRE\nATID 3001\n"
-//                    + "ATMY 2\n"
-//                    + "ATDH 0\n"
-//                    + "ATDL 1\n"
-//                    + "ATWR\nATAP\n").split("\n")) {
+//        }
 //
-//                System.out.println(">>" + w + " " + exec(w + "\r"));
+//        if (port == null) {
+//            System.err.println("no port");
+//            System.exit(0);
+//        }
 //
-//            }
+//        if (port.openPort(2000)) {
+//
+////            port.setBaudRate(9600);
+//            System.err.println("port open");
+//
+//            out = port.getOutputStream();
+//
+//            in = port.getInputStream();
+//
+////            exec("+++");
+//////
+////            System.err.println(exec("AT\r"));
+////            for (String w : ("ATRE\nATID 3001\n"
+////                    + "ATMY 1\n"
+////                    + "ATDH 0\n"
+////                    + "ATDL 2\n"
+////                    + "ATWR\nATAP\n").split("\n")) {
 ////
-////            System.out.println(">>" + exec("ATDL 403021BA\r"));
+////                System.out.println(">>" + w + " " + exec(w + "\r"));
+////
+////            }
+////            for (String w : ("ATRE\nATID 3001\n"
+////                    + "ATMY 2\n"
+////                    + "ATDH 0\n"
+////                    + "ATDL 1\n"
+////                    + "ATWR\nATAP\n").split("\n")) {
+////
+////                System.out.println(">>" + w + " " + exec(w + "\r"));
+////
+////            }
+//////
+//////            System.out.println(">>" + exec("ATDL 403021BA\r"));
+//////            System.out.println(">>" + exec("ATSL\r"));
+////            System.out.println(">>" + exec("ATMY\r"));
+////            System.out.println(">>" + exec("ATAP\r"));
+////            System.out.println(">>" + exec("ATSH\r"));
 ////            System.out.println(">>" + exec("ATSL\r"));
-//            System.out.println(">>" + exec("ATMY\r"));
-//            System.out.println(">>" + exec("ATAP\r"));
-//            System.out.println(">>" + exec("ATSH\r"));
-//            System.out.println(">>" + exec("ATSL\r"));
+//////            System.out.println(">>" + exec("ATWR\r"));
+////            System.out.println(">>" + exec("ATAP 0\r"));
 ////            System.out.println(">>" + exec("ATWR\r"));
-//            System.out.println(">>" + exec("ATAP 0\r"));
-//            System.out.println(">>" + exec("ATWR\r"));
-//            System.out.println(">>" + exec("ATVR\r"));
-//            System.err.println(exec("ATCN\r"));
-            System.err.println("resuming...");
-
-            while (true) {
-//                out.write("|ACC 0 1000|MV 0 1000|ACC 1 1000|MV 1 1000|\r\n".getBytes("UTF-8"));
-                out.write("ABC 123\r\n".getBytes("UTF-8"));
-                out.flush();
-                Thread.sleep(5_000);
-
-                System.err.println("+");
-
-                int c = 0;
-                while (in.available() > 0) {
-                    System.err.print((char) in.read());
-                    c++;
-                }
-                if (c > 0) {
-                    System.err.println();
-                }
-            }
-        }
+////            System.out.println(">>" + exec("ATVR\r"));
+////            System.err.println(exec("ATCN\r"));
+//            System.err.println("resuming...");
+//
+//            while (true) {
+////                out.write("|ACC 0 1000|MV 0 1000|ACC 1 1000|MV 1 1000|\r\n".getBytes("UTF-8"));
+//                out.write("ABC 123\r\n".getBytes("UTF-8"));
+//                out.flush();
+//                Thread.sleep(5_000);
+//
+//                System.err.println("+");
+//
+//                int c = 0;
+//                while (in.available() > 0) {
+//                    System.err.print((char) in.read());
+//                    c++;
+//                }
+//                if (c > 0) {
+//                    System.err.println();
+//                }
+//            }
+//        }
 
     }
 
