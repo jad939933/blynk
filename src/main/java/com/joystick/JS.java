@@ -74,7 +74,7 @@ public class JS {
 
             Event event = new Event();
 
-            float x = 0, y = 1;
+            float x = 0, y = 0;
 
             while (queue.getNextEvent(event)) {
 
