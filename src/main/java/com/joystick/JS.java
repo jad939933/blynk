@@ -11,6 +11,8 @@ import com.digi.xbee.api.models.XBee64BitAddress;
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
+import net.java.games.input.ControllerEvent;
+import net.java.games.input.ControllerListener;
 import net.java.games.input.Event;
 import net.java.games.input.EventQueue;
 
@@ -46,53 +48,73 @@ public class JS {
 
         System.out.println("UART open");
 
-        uart.sendData(new RemoteXBeeDevice(uart, addr_64), "|ACC 0 1000|ACC 1 1000|".getBytes());
+        uart.sendData(new RemoteXBeeDevice(uart, addr_64), "|ACC 0 500|ACC 1 500|".getBytes());
+
+        ControllerEnvironment.getDefaultEnvironment().addControllerListener(new ControllerListener() {
+            @Override
+            public void controllerRemoved(ControllerEvent ce) {
+                System.err.println("removed controller " + ce.getController().getName());
+            }
+
+            @Override
+            public void controllerAdded(ControllerEvent ce) {
+                System.err.println("added controller " + ce.getController().getName());
+            }
+        });
 
         Controller[] controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
 
+        long lastUpdate = 0;
+
         Controller joystick = null;
-
-        for (int i = 0; i < controllers.length; i++) {
-            Controller c = controllers[i];
-            System.err.println(c.getName() + "...");
-            if (c.getName().equalsIgnoreCase(System.getProperty("joystick.name"))) {
-                joystick = c;
-                System.err.println(c.getName());
-            }
-        }
-
-        if (joystick == null) {
-            System.out.println("Found no controllers.");
-            System.exit(0);
-        }
 
         float x[] = {0}, y[] = {0};
 
         while (true) {
 
-            joystick.poll();
+            long now = System.currentTimeMillis();
 
-            EventQueue queue = joystick.getEventQueue();
+            if (joystick == null) {
 
-            Event event = new Event();
-
-            while (queue.getNextEvent(event)) {
-
-                Component comp = event.getComponent();
-                float value = event.getValue();
-
-                switch (comp.getName().toLowerCase()) {
-                    case "x":
-                        x[0] = value;
+                for (int i = 0; i < controllers.length; i++) {
+                    Controller c = controllers[i];
+                    System.err.println(c.getName() + "...");
+                    if (c.getName().equalsIgnoreCase(System.getProperty("joystick.name"))) {
+                        joystick = c;
+                        System.err.println(c.getName());
+                        lastUpdate = now;
                         break;
-                    case "y":
-                        y[0] = value;
-                        break;
+                    }
                 }
 
-            }
+            } else {
 
-            send(x[0], y[0]);
+                joystick.joystick.poll();
+
+                EventQueue queue = joystick.getEventQueue();
+
+                Event event = new Event();
+
+                while (queue.getNextEvent(event)) {
+
+                    Component comp = event.getComponent();
+                    float value = event.getValue();
+
+                    switch (comp.getName().toLowerCase()) {
+                        case "x":
+                            x[0] = value;
+                            break;
+                        case "y":
+                            y[0] = value;
+                            break;
+                    }
+
+                    lastUpdate = now;
+                }
+
+                send(x[0], y[0]);
+
+            }
 
             try {
                 Thread.sleep(10);
