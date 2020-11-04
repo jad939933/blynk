@@ -76,6 +76,7 @@ public class JS {
 
             if (joystick == null) {
 
+                System.err.println("searching for a controller...");
                 for (int i = 0; i < controllers.length; i++) {
                     Controller c = controllers[i];
                     System.err.println(c.getName() + "...");
@@ -85,6 +86,13 @@ public class JS {
                         lastUpdate = now;
                         break;
                     }
+                }
+
+                try {
+                    Thread.sleep(10_000);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
                 }
 
             } else {
@@ -114,14 +122,15 @@ public class JS {
 
                 send(x[0], y[0]);
 
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
             }
 
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
         }
 
     }
