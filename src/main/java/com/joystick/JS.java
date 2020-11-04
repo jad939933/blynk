@@ -104,6 +104,8 @@ public class JS {
 
     }
 
+    static int lastX = 0, lastY = 0;
+
     /**
      *
      * @param x
@@ -114,6 +116,14 @@ public class JS {
 
         int _x = (int) (x * 512);
         int _y = (int) (y * 512);
+
+        if (lastX == _x && lastY == _y) {
+            //skip
+            return;
+        }
+
+        lastX = _x;
+        lastY = _y;
 
         System.err.println(">>" + _x + ":" + _y);
 
