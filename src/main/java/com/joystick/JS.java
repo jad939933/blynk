@@ -11,8 +11,6 @@ import com.digi.xbee.api.models.XBee64BitAddress;
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
-import net.java.games.input.ControllerEvent;
-import net.java.games.input.ControllerListener;
 import net.java.games.input.Event;
 import net.java.games.input.EventQueue;
 
@@ -50,20 +48,6 @@ public class JS {
 
         uart.sendData(new RemoteXBeeDevice(uart, addr_64), "|ACC 0 500|ACC 1 500|".getBytes());
 
-        ControllerEnvironment.getDefaultEnvironment().addControllerListener(new ControllerListener() {
-            @Override
-            public void controllerRemoved(ControllerEvent ce) {
-                System.err.println("removed controller " + ce.getController().getName());
-            }
-
-            @Override
-            public void controllerAdded(ControllerEvent ce) {
-                System.err.println("added controller " + ce.getController().getName());
-            }
-        });
-
-        long lastUpdate = 0;
-
         Controller joystick = null;
 
         float x[] = {0}, y[] = {0};
@@ -84,7 +68,6 @@ public class JS {
                     if (c.getName().equalsIgnoreCase(System.getProperty("joystick.name"))) {
                         joystick = c;
                         System.err.println(c.getName());
-                        lastUpdate = now;
                         break;
                     }
                 }
@@ -98,7 +81,11 @@ public class JS {
 
             } else {
 
-                joystick.poll();
+                if (joystick.poll() == false) {
+                    System.err.println("breaking...");
+                    joystick=null;
+                    continue;
+                }
 
                 EventQueue queue = joystick.getEventQueue();
 
@@ -118,7 +105,6 @@ public class JS {
                             break;
                     }
 
-                    lastUpdate = now;
                 }
 
                 send(x[0], y[0]);
