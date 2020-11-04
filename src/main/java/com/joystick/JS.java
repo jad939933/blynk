@@ -48,6 +48,8 @@ public class JS {
 
         System.err.println("UART open");
 
+        uart.sendData(new RemoteXBeeDevice(uart, addr_64), "|ACC 0 4000|ACC 1 4000|".getBytes());
+
         Controller joystick = null;
 
         float x[] = {0}, y[] = {0}, ratio[] = {0};
@@ -153,15 +155,15 @@ public class JS {
 
         String DATA_TO_SEND = "";
         if (x == 0) {
-            DATA_TO_SEND += "|ACC 0 4000|STP 0|";
+            DATA_TO_SEND += "|STP 0|";
         } else {
-            DATA_TO_SEND += "|SPD 0 999999|ACC 0 " + Math.max(50, (int) (Math.abs(x))) + "|MV 0 " + ((x > 0) ? "99999" : "-99999") + "|";
+            DATA_TO_SEND += "|SPD 0 " + Math.max(20, (int) (Math.abs(x))) + "|MV 0 " + ((x > 0) ? "99999" : "-99999") + "|";
         }
 
         if (y == 0) {
-            DATA_TO_SEND += "|ACC 1 4000|STP 1|";
+            DATA_TO_SEND += "|STP 1|";
         } else {
-            DATA_TO_SEND += "|SPD 1 999999|ACC 1 " + Math.max(50, (int) (Math.abs(y))) + "|MV 1 " + ((y > 0) ? "99999" : "-99999") + "|";
+            DATA_TO_SEND += "|SPD 1 " + Math.max(20, (int) (Math.abs(y))) + "|MV 1 " + ((y > 0) ? "99999" : "-99999") + "|";
         }
 
         if (lastCmd.equalsIgnoreCase(DATA_TO_SEND)) {
