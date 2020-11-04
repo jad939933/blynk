@@ -72,18 +72,20 @@ public class JS {
                     }
                 }
 
-                try {
-                    Thread.sleep(10_000);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                if (joystick == null) {
+                    try {
+                        Thread.sleep(10_000);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
                 }
 
             } else {
 
                 if (joystick.poll() == false) {
                     System.err.println("breaking...");
-                    joystick=null;
+                    joystick = null;
                     continue;
                 }
 
