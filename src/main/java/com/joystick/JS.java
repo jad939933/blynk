@@ -52,7 +52,7 @@ public class JS {
 
         Controller joystick = null;
 
-        float x[] = {0}, y[] = {0};
+        float x[] = {0}, y[] = {0}, ratio[] = {0};
 
         while (true) {
 
@@ -107,11 +107,15 @@ public class JS {
                         case "y":
                             y[0] = value;
                             break;
+                        default:
+                            System.err.println(comp.getName() + ":" + value);
+                            ratio[0] = value;
+                            break;
                     }
 
                 }
 
-                send(x[0], y[0]);
+                send(x[0], y[0], ratio[0]);
 
                 try {
                     Thread.sleep(10);
@@ -126,22 +130,10 @@ public class JS {
 
     }
 
-    static int lastX = 0, lastY = 0;
+    public static void send(float x, float y, float ratio) throws Exception {
 
-    public static void send(float x, float y) throws Exception {
-
-        int _x = (int) (x * 512);
-        int _y = (int) (y * 512);
-
-        if (lastX == _x && lastY == _y) {
-            //skip
-            return;
-        }
-
-        lastX = _x;
-        lastY = _y;
-
-        System.err.println(">>" + _x + ":" + _y);
+        int _x = (int) (x * 4000 * ratio + 10);
+        int _y = (int) (y * 4000 * ratio + 10);
 
         String DATA_TO_SEND = "";
         if (_x == 0) {
@@ -156,9 +148,16 @@ public class JS {
             DATA_TO_SEND += "|SPD 1 " + Math.max(200, (int) (8 * Math.abs(_y))) + "|MV 1 " + ((_y > 0) ? "99999" : "-99999") + "|";
         }
 
+        if (lastCmd.equalsIgnoreCase(DATA_TO_SEND)) {
+            return;
+        }
+
+        lastCmd = DATA_TO_SEND;
 //        myDevice.sendBroadcastData(dataToSend);
         uart.sendData(new RemoteXBeeDevice(uart, addr_64), DATA_TO_SEND.getBytes());
     }
+
+    static String lastCmd = "";
 
     private static ControllerEnvironment createDefaultEnvironment() throws ReflectiveOperationException {
 
