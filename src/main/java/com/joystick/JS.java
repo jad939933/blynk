@@ -48,8 +48,6 @@ public class JS {
 
         System.err.println("UART open");
 
-        uart.sendData(new RemoteXBeeDevice(uart, addr_64), "|ACC 0 4000|ACC 1 4000|".getBytes());
-
         Controller joystick = null;
 
         float x[] = {0}, y[] = {0}, ratio[] = {0};
@@ -70,6 +68,10 @@ public class JS {
                     if (c.getName().equalsIgnoreCase(System.getProperty("joystick.name"))) {
                         joystick = c;
                         System.err.println(c.getName());
+
+                        //reset accelerations
+                        uart.sendData(new RemoteXBeeDevice(uart, addr_64), "|ACC 0 4000|ACC 1 4000|".getBytes());
+
                         break;
                     }
                 }
