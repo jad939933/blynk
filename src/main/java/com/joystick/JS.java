@@ -9,6 +9,7 @@ import com.digi.xbee.api.RemoteXBeeDevice;
 import com.digi.xbee.api.XBeeDevice;
 import com.digi.xbee.api.models.XBee64BitAddress;
 import java.lang.reflect.Constructor;
+import java.util.Set;
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
@@ -160,6 +161,19 @@ public class JS {
     }
 
     private static ControllerEnvironment createDefaultEnvironment() throws ReflectiveOperationException {
+
+        final Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+        for (final Thread thread : threadSet) {
+            final String name = thread.getClass().getName();
+            if (name.equals("net.java.games.input.RawInputEventQueue$QueueThread")) {
+                thread.interrupt();
+                try {
+                    thread.join();
+                } catch (final InterruptedException e) {
+                    thread.interrupt();
+                }
+            }
+        }
 
         // Find constructor (class is package private, so we can't access it directly)
         Constructor<ControllerEnvironment> constructor = (Constructor<ControllerEnvironment>) Class.forName("net.java.games.input.DefaultControllerEnvironment").getDeclaredConstructors()[0];
