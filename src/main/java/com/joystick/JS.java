@@ -66,6 +66,8 @@ public class JS {
             System.exit(0);
         }
 
+        float x[] = {0}, y[] = {0};
+
         while (true) {
 
             joystick.poll();
@@ -74,8 +76,6 @@ public class JS {
 
             Event event = new Event();
 
-            float x = 0, y = 0;
-
             while (queue.getNextEvent(event)) {
 
                 Component comp = event.getComponent();
@@ -83,16 +83,16 @@ public class JS {
 
                 switch (comp.getName().toLowerCase()) {
                     case "x":
-                        x = value;
+                        x[0] = value;
                         break;
                     case "y":
-                        y = value;
+                        y[0] = value;
                         break;
                 }
 
             }
 
-            send(x, y);
+            send(x[0], y[0]);
 
             try {
                 Thread.sleep(10);
@@ -106,12 +106,6 @@ public class JS {
 
     static int lastX = 0, lastY = 0;
 
-    /**
-     *
-     * @param x
-     * @param y
-     * @throws Exception
-     */
     public static void send(float x, float y) throws Exception {
 
         int _x = (int) (x * 512);
