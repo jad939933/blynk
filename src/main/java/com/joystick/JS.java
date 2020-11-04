@@ -10,7 +10,7 @@ import com.digi.xbee.api.XBeeDevice;
 import com.digi.xbee.api.models.XBee64BitAddress;
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
-import net.java.games.input.ControllerEnvironment;
+import net.java.games.input.DirectAndRawInputEnvironmentPlugin;
 import net.java.games.input.Event;
 import net.java.games.input.EventQueue;
 
@@ -60,8 +60,10 @@ public class JS {
 
                 System.err.println("searching for a controller...");
 
-                Controller[] controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
+                DirectAndRawInputEnvironmentPlugin directEnv = new DirectAndRawInputEnvironmentPlugin();
+                Controller[] controllers = directEnv.getControllers();
 
+//                Controller[] controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
                 for (int i = 0; i < controllers.length; i++) {
                     Controller c = controllers[i];
                     System.err.println(c.getName() + "...");
