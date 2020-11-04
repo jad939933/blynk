@@ -8,10 +8,10 @@ package com.joystick;
 import com.digi.xbee.api.RemoteXBeeDevice;
 import com.digi.xbee.api.XBeeDevice;
 import com.digi.xbee.api.models.XBee64BitAddress;
+import java.lang.reflect.Constructor;
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
-import net.java.games.input.DirectAndRawInputEnvironmentPlugin;
 import net.java.games.input.Event;
 import net.java.games.input.EventQueue;
 
@@ -61,15 +61,7 @@ public class JS {
 
                 System.err.println("searching for a controller...");
 
-                Controller[] controllers = {};
-
-                if (controllers.length == 0) {
-                    controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
-                }
-
-                if (controllers.length == 0) {
-                    controllers = new DirectAndRawInputEnvironmentPlugin().getControllers();
-                }
+                Controller[] controllers = createDefaultEnvironment().getControllers();
 
                 for (int i = 0; i < controllers.length; i++) {
                     Controller c = controllers[i];
@@ -165,5 +157,17 @@ public class JS {
 
 //        myDevice.sendBroadcastData(dataToSend);
         uart.sendData(new RemoteXBeeDevice(uart, addr_64), DATA_TO_SEND.getBytes());
+    }
+
+    private static ControllerEnvironment createDefaultEnvironment() throws ReflectiveOperationException {
+
+        // Find constructor (class is package private, so we can't access it directly)
+        Constructor<ControllerEnvironment> constructor = (Constructor<ControllerEnvironment>) Class.forName("net.java.games.input.DefaultControllerEnvironment").getDeclaredConstructors()[0];
+
+        // Constructor is package private, so we have to deactivate access control checks
+        constructor.setAccessible(true);
+
+        // Create object with default constructor
+        return constructor.newInstance();
     }
 }
