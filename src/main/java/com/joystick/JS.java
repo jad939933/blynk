@@ -149,7 +149,7 @@ public class JS {
         ratio = (ratio + 1) / 2; //normalize between zero (depressed) and one
 
         if (ratio == 0) {
-            ratio = .05f;
+            ratio = .01f;
         }
 
         x = x * ratio;
@@ -159,13 +159,13 @@ public class JS {
         if (x == 0) {
             DATA_TO_SEND += "|STP 0|";
         } else {
-            DATA_TO_SEND += "|SPD 0 " + Math.max(20, (int) (Math.abs(x))) + "|MV 0 " + ((x > 0) ? "99999" : "-99999") + "|";
+            DATA_TO_SEND += "|SPD 0 " + Math.max(1, (int) (Math.abs(x))) + "|MV 0 " + ((x > 0) ? "99999" : "-99999") + "|";
         }
 
         if (y == 0) {
             DATA_TO_SEND += "|STP 1|";
         } else {
-            DATA_TO_SEND += "|SPD 1 " + Math.max(20, (int) (Math.abs(y))) + "|MV 1 " + ((y > 0) ? "99999" : "-99999") + "|";
+            DATA_TO_SEND += "|SPD 1 " + Math.max(1, (int) (Math.abs(y))) + "|MV 1 " + ((y > 0) ? "99999" : "-99999") + "|";
         }
 
         if (lastCmd.equalsIgnoreCase(DATA_TO_SEND)) {
