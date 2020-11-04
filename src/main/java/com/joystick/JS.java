@@ -107,9 +107,11 @@ public class JS {
                         case "y":
                             y[0] = value;
                             break;
+                        case "rz":
+                            ratio[0] = value;
+                            break;
                         default:
                             System.err.println(comp.getName() + ":" + value);
-                            ratio[0] = value;
                             break;
                     }
 
@@ -130,28 +132,42 @@ public class JS {
 
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @param ratio
+     * @throws Exception
+     */
     public static void send(float x, float y, float ratio) throws Exception {
 
-        int _x = (int) (x * 4000 * ratio + 10);
-        int _y = (int) (y * 4000 * ratio + 10);
+        x = x * 4000;
+        x = y * 4000;
+
+        ratio = (ratio + 1) / 2; //normalize between zero (depressed) and one
+
+        x = x * ratio;
+        y = y * ratio;
+
+        System.err.println(ratio);
 
         String DATA_TO_SEND = "";
-        if (_x == 0) {
+        if (x == 0) {
             DATA_TO_SEND += "|STP 0|";
         } else {
-            DATA_TO_SEND += "|SPD 0 " + Math.max(200, (int) (8 * Math.abs(_x))) + "|MV 0 " + ((_x > 0) ? "99999" : "-99999") + "|";
+            DATA_TO_SEND += "|SPD 0 " + Math.max(200, (int) (Math.abs(x))) + "|MV 0 " + ((x > 0) ? "99999" : "-99999") + "|";
         }
 
-        if (_y == 0) {
+        if (y == 0) {
             DATA_TO_SEND += "|STP 1|";
         } else {
-            DATA_TO_SEND += "|SPD 1 " + Math.max(200, (int) (8 * Math.abs(_y))) + "|MV 1 " + ((_y > 0) ? "99999" : "-99999") + "|";
+            DATA_TO_SEND += "|SPD 1 " + Math.max(200, (int) (Math.abs(y))) + "|MV 1 " + ((y > 0) ? "99999" : "-99999") + "|";
         }
 
         if (lastCmd.equalsIgnoreCase(DATA_TO_SEND)) {
             return;
         }
-
+        System.err.println(DATA_TO_SEND);
         lastCmd = DATA_TO_SEND;
 //        myDevice.sendBroadcastData(dataToSend);
         uart.sendData(new RemoteXBeeDevice(uart, addr_64), DATA_TO_SEND.getBytes());
@@ -159,6 +175,10 @@ public class JS {
 
     static String lastCmd = "";
 
+    /**
+     *
+     * @return @throws ReflectiveOperationException
+     */
     private static ControllerEnvironment createDefaultEnvironment() throws ReflectiveOperationException {
 
         final Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
