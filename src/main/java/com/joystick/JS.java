@@ -150,6 +150,8 @@ public class JS {
 
         if (ratio == 0) {
             ratio = .01f;
+        } else if (ratio < .5) {
+            ratio = ratio / 4;
         }
 
         x = x * ratio;
