@@ -141,15 +141,17 @@ public class JS {
      */
     public static void send(float x, float y, float ratio) throws Exception {
 
-        x = x * 4000;
-        x = y * 4000;
+        x *= 4000;
+        y *= 4000;
 
         ratio = (ratio + 1) / 2; //normalize between zero (depressed) and one
 
+        if (ratio == 0) {
+            ratio = .05f;
+        }
+
         x = x * ratio;
         y = y * ratio;
-
-        System.err.println(ratio);
 
         String DATA_TO_SEND = "";
         if (x == 0) {
