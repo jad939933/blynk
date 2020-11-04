@@ -35,7 +35,7 @@ public class JS {
                 String k = p.substring(0, c);
                 if (k.startsWith("--")) {
                     String v = p.substring(c + 1);
-                    System.out.println("config " + k + "=" + v);
+                    System.err.println("config " + k + "=" + v);
                     System.setProperty(k.substring(2), v);
                 }
             }
@@ -46,7 +46,7 @@ public class JS {
         uart = new XBeeDevice(System.getProperty("xbee.port"), Integer.parseInt(System.getProperty("xbee.baud_rate")));
         uart.open();
 
-        System.out.println("UART open");
+        System.err.println("UART open");
 
         uart.sendData(new RemoteXBeeDevice(uart, addr_64), "|ACC 0 500|ACC 1 500|".getBytes());
 
@@ -62,8 +62,6 @@ public class JS {
             }
         });
 
-        Controller[] controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
-
         long lastUpdate = 0;
 
         Controller joystick = null;
@@ -77,6 +75,9 @@ public class JS {
             if (joystick == null) {
 
                 System.err.println("searching for a controller...");
+
+                Controller[] controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
+
                 for (int i = 0; i < controllers.length; i++) {
                     Controller c = controllers[i];
                     System.err.println(c.getName() + "...");
