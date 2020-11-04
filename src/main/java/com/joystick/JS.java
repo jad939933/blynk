@@ -89,7 +89,7 @@ public class JS {
 
             } else {
 
-                joystick.joystick.poll();
+                joystick.poll();
 
                 EventQueue queue = joystick.getEventQueue();
 
